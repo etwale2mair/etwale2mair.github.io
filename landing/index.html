@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>etwale · Duy-Lam Lê-Vo</title>
+  <meta name="description" content="Duy-Lam Lê-Vo (etwale). portfolio and writeups." />
+  <meta property="og:title" content="etwale · Duy-Lam Lê-Vo" />
+  <meta property="og:description" content="portfolio and writeups." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="writeups/static/icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap" />
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t } catch {}
+  </script>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"><span id="progress"></span></div>
+
+  <header class="topbar">
+    <a class="brand" href="#top">etwale<span class="caret">_</span></a>
+    <nav>
+      <a href="#work">writeups</a>
+      <a href="#about">about</a>
+      <a href="https://www.linkedin.com/in/duy-lam-l" rel="noopener">linkedin</a>
+      <a href="https://github.com/etwale2mair" rel="noopener">github</a>
+      <button class="theme-toggle" type="button" aria-label="toggle light/dark theme">◐</button>
+    </nav>
+  </header>
+
+  <section class="hero" id="top">
+    <canvas id="field" aria-hidden="true"></canvas>
+    <div class="hero-inner">
+      <h1 class="hero-handle" id="handle">etwale</h1>
+      <p class="hero-name">Duy-Lam Lê-Vo</p>
+      <p class="hero-title"><span id="title-type">offensive security engineer</span><span class="type-caret">▍</span></p>
+    </div>
+    <a class="scroll-cue" href="#stats" aria-label="scroll down"><span>scroll</span><span class="scroll-line"></span></a>
+  </section>
+
+  <main>
+    <section class="stats" id="stats" aria-label="stats">
+      <div class="stat reveal"><div class="num" data-count="109">109</div><div class="label">root-me challenges</div></div>
+      <div class="stat reveal"><div class="num" data-count="5" data-suffix="/5">5/5</div><div class="label">lakera solace</div></div>
+      <div class="stat reveal"><div class="num" id="stat-writeups" data-count="1">1</div><div class="label">writeups</div></div>
+      <div class="stat reveal"><div class="num">CPTS</div><div class="label">in progress</div></div>
+    </section>
+
+    <section class="block" id="work">
+      <div class="block-head reveal">
+        <h2><span class="idx">01</span>latest writeups</h2>
+        <a href="writeups/">all writeups →</a>
+      </div>
+      <ol class="cards" id="cards"></ol>
+    </section>
+
+    <section class="block" id="about">
+      <div class="block-head reveal"><h2><span class="idx">02</span>about</h2></div>
+      <div class="about-grid">
+        <p class="reveal">master's in cybersecurity from OTERIA, currently a cybersecurity analyst at Docaposte. I practice on Root-Me and HackTheBox, and I'm specialising in AI security.</p>
+        <p class="reveal">every writeup follows how I actually worked: what I understood, what I guessed, what I tested, what confirmed it. HackTheBox writeups only go up once a box is retired.</p>
+      </div>
+      <div class="chips reveal">
+        <span class="chip">web</span><span class="chip">active directory</span><span class="chip">cloud</span><span class="chip">AI security</span><span class="chip">root-me</span><span class="chip">hackthebox</span>
+      </div>
+    </section>
+
+    <section class="block contact reveal" id="contact">
+      <h2><span class="idx">03</span>let's talk</h2>
+      <div class="cta-row">
+        <a class="btn primary" href="https://www.linkedin.com/in/duy-lam-l" rel="noopener">linkedin →</a>
+        <a class="btn" href="https://github.com/etwale2mair" rel="noopener">github</a>
+        <a class="btn" href="writeups/">writeups</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>© <span id="year"></span> Duy-Lam Lê-Vo</span>
+    <span>built with <a href="https://quartz.jzhao.xyz/" rel="noopener">Quartz</a> + hand-rolled html</span>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

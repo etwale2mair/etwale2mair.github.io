@@ -27,8 +27,12 @@ jobs:
       - run: npm ci
       - name: Install Quartz plugins
         run: npx quartz plugin install
-      - name: Build Quartz
-        run: npx quartz build
+      - name: Build Quartz into /writeups
+        run: npx quartz build -o public/writeups
+      - name: Generate writeups index
+        run: node scripts/gen-writeups-index.mjs public/writeups landing/writeups.json
+      - name: Assemble landing page at root
+        run: cp landing/index.html landing/style.css landing/app.js landing/writeups.json public/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public

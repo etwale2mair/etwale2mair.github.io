@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
 configuration:
-  pageTitle: "AI Red Team Writeups"
+  pageTitle: "etwale · writeups"
   pageTitleSuffix: ""
   enableSPA: true
   enablePopovers: true
