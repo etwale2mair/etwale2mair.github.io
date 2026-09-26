@@ -2,9 +2,9 @@
 
 document.getElementById("year").textContent = new Date().getFullYear();
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const root = document.documentElement;
 
 /* ---------- theme toggle (shares Quartz's localStorage key) ---------- */
-const root = document.documentElement;
 function currentTheme() {
   if (root.dataset.theme) return root.dataset.theme;
   return matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
@@ -29,12 +29,105 @@ function onScroll() {
 addEventListener("scroll", onScroll, { passive: true });
 onScroll();
 
-/* ---------- hero: floating particle field + faint links ---------- */
+/* ---------- E. film grain (generated once, tiled) ---------- */
+(function grain() {
+  const layer = document.querySelector(".grain");
+  if (!layer || reduceMotion) return;
+  const s = 120, c = document.createElement("canvas");
+  c.width = c.height = s;
+  const g = c.getContext("2d");
+  const img = g.createImageData(s, s);
+  for (let i = 0; i < img.data.length; i += 4) {
+    const v = (Math.random() * 255) | 0;
+    img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
+    img.data[i + 3] = 255;
+  }
+  g.putImageData(img, 0, 0);
+  layer.style.backgroundImage = `url(${c.toDataURL("image/png")})`;
+})();
+
+/* ---------- A. decode the handle letter by letter ---------- */
+(function decode() {
+  const el = document.getElementById("handle");
+  if (!el) return;
+  const word = "etwale";
+  const glyphs = "!<>-_\\/[]{}=+*^?#________";
+  el.textContent = "";
+  const spans = [...word].map((ch) => {
+    const s = document.createElement("span");
+    s.className = "ch";
+    s.textContent = ch;
+    el.appendChild(s);
+    return { s, ch };
+  });
+  if (reduceMotion) return;
+
+  spans.forEach(({ s, ch }, i) => {
+    const start = 120 + i * 90;      // stagger left to right
+    const dur = 420;                 // scramble time per letter
+    setTimeout(() => {
+      s.classList.add("scrambling");
+      const iv = setInterval(() => {
+        s.textContent = glyphs[(Math.random() * glyphs.length) | 0];
+      }, 45);
+      setTimeout(() => {
+        clearInterval(iv);
+        s.textContent = ch;
+        s.classList.remove("scrambling");
+      }, dur);
+    }, start);
+  });
+})();
+
+/* ---------- B. cursor spotlight + light parallax (desktop, pointer) ---------- */
+(function spotlight() {
+  const hero = document.querySelector(".hero");
+  const spot = document.querySelector(".spotlight");
+  const inner = document.getElementById("hero-inner");
+  if (!hero || !spot || reduceMotion) return;
+  if (!matchMedia("(pointer: fine)").matches) return;
+
+  hero.addEventListener("pointermove", (e) => {
+    const r = hero.getBoundingClientRect();
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    spot.style.setProperty("--mx", x + "px");
+    spot.style.setProperty("--my", y + "px");
+    spot.style.opacity = "1";
+    const dx = (x / r.width - 0.5) * -14;
+    const dy = (y / r.height - 0.5) * -10;
+    inner.style.transform = `translate(${dx}px, ${dy}px)`;
+    if (window.__field) window.__field.setPointer(x, y);
+  });
+  hero.addEventListener("pointerleave", () => {
+    spot.style.opacity = "0";
+    inner.style.transform = "";
+    if (window.__field) window.__field.setPointer(null, null);
+  });
+})();
+
+/* ---------- C. hero fades / drifts up on scroll ---------- */
+(function heroExit() {
+  const inner = document.getElementById("hero-inner");
+  const cue = document.querySelector(".scroll-cue");
+  if (!inner || reduceMotion) return;
+  let ticking = false;
+  function upd() {
+    const vh = window.innerHeight;
+    const p = Math.min(1, window.scrollY / (vh * 0.8));
+    inner.style.opacity = String(1 - p);
+    inner.style.transform = `translateY(${-p * 40}px)`;
+    if (cue) cue.style.opacity = String(1 - Math.min(1, window.scrollY / 200));
+    ticking = false;
+  }
+  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+})();
+
+/* ---------- hero particle field ---------- */
 (function field() {
   const canvas = document.getElementById("field");
   if (!canvas || reduceMotion) return;
   const ctx = canvas.getContext("2d");
-  let w, h, pts, raf;
+  let w, h, pts, raf, px = null, py = null, slow = 1;
   const accent = () => getComputedStyle(root).getPropertyValue("--accent").trim() || "#f5a524";
 
   function resize() {
@@ -48,12 +141,18 @@ onScroll();
       vx: (Math.random() - 0.5) * 0.28, vy: (Math.random() - 0.5) * 0.28,
     }));
   }
+  // C: slow the field as the hero scrolls away
+  addEventListener("scroll", () => {
+    slow = Math.max(0.15, 1 - window.scrollY / (window.innerHeight * 0.9));
+  }, { passive: true });
+
+  window.__field = { setPointer(x, y) { px = x; py = y; } };
 
   function draw() {
     ctx.clearRect(0, 0, w, h);
     const c = accent();
     for (const p of pts) {
-      p.x += p.vx; p.y += p.vy;
+      p.x += p.vx * slow; p.y += p.vy * slow;
       if (p.x < 0 || p.x > w) p.vx *= -1;
       if (p.y < 0 || p.y > h) p.vy *= -1;
     }
@@ -62,13 +161,24 @@ onScroll();
         const a = pts[i], b = pts[j];
         const d2 = (a.x - b.x) ** 2 + (a.y - b.y) ** 2;
         if (d2 < 120 * 120) {
-          ctx.globalAlpha = (1 - d2 / (120 * 120)) * 0.18;
+          ctx.globalAlpha = (1 - d2 / (120 * 120)) * 0.18 * slow;
           ctx.strokeStyle = c; ctx.lineWidth = 1;
           ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
         }
       }
     }
-    ctx.globalAlpha = 0.5; ctx.fillStyle = c;
+    // B: near the pointer, link points more strongly
+    if (px != null) {
+      for (const p of pts) {
+        const d2 = (p.x - px) ** 2 + (p.y - py) ** 2;
+        if (d2 < 150 * 150) {
+          ctx.globalAlpha = (1 - d2 / (150 * 150)) * 0.5 * slow;
+          ctx.strokeStyle = c; ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(px, py); ctx.stroke();
+        }
+      }
+    }
+    ctx.globalAlpha = 0.5 * slow; ctx.fillStyle = c;
     for (const p of pts) { ctx.beginPath(); ctx.arc(p.x, p.y, 1.4, 0, 7); ctx.fill(); }
     ctx.globalAlpha = 1;
     raf = requestAnimationFrame(draw);
@@ -77,7 +187,7 @@ onScroll();
   addEventListener("resize", () => { cancelAnimationFrame(raf); resize(); draw(); });
 })();
 
-/* ---------- hero title: typewriter cycling roles ---------- */
+/* ---------- hero title typewriter ---------- */
 (function typer() {
   const el = document.getElementById("title-type");
   if (!el) return;
@@ -90,21 +200,25 @@ onScroll();
     ci += deleting ? -1 : 1;
     el.textContent = word.slice(0, ci);
     let delay = deleting ? 40 : 75;
-    if (!deleting && ci === word.length) { delay = 2200; deleting = true; }
+    if (!deleting && ci === word.length) { delay = 2400; deleting = true; }
     else if (deleting && ci === 0) { deleting = false; ri = (ri + 1) % roles.length; delay = 400; }
     setTimeout(step, delay);
   }
-  setTimeout(step, 900);
+  setTimeout(step, 1400);
 })();
 
 /* ---------- reveal on scroll ---------- */
-(function reveal() {
-  const els = document.querySelectorAll(".reveal");
-  if (reduceMotion || !("IntersectionObserver" in window)) { els.forEach((e) => e.classList.add("in")); return; }
+function reveal(el) {
+  el.classList.add("in");
+  // stagger children that opt in
+  el.querySelectorAll(".tag").forEach((t, i) => t.style.setProperty("--t", i));
+  el.querySelectorAll(".chip").forEach((t, i) => t.style.setProperty("--t", i));
+}
+(function watch() {
+  const els = document.querySelectorAll(".reveal, .reveal-group");
+  if (reduceMotion || !("IntersectionObserver" in window)) { els.forEach(reveal); return; }
   const io = new IntersectionObserver((entries) => {
-    entries.forEach((e, i) => {
-      if (e.isIntersecting) { setTimeout(() => e.target.classList.add("in"), i * 60); io.unobserve(e.target); }
-    });
+    entries.forEach((e) => { if (e.isIntersecting) { reveal(e.target); io.unobserve(e.target); } });
   }, { threshold: 0.15 });
   els.forEach((e) => io.observe(e));
 })();
@@ -114,14 +228,12 @@ function animateCount(el) {
   const target = parseInt(el.dataset.count || "0", 10);
   const suffix = el.dataset.suffix || "";
   if (reduceMotion || !target) { el.textContent = target + suffix; return; }
-  const dur = 900; const start = performance.now();
-  function tick(now) {
+  const dur = 900, start = performance.now();
+  (function tick(now) {
     const t = Math.min(1, (now - start) / dur);
-    const eased = 1 - Math.pow(1 - t, 3);
-    el.textContent = Math.round(target * eased) + suffix;
+    el.textContent = Math.round(target * (1 - Math.pow(1 - t, 3))) + suffix;
     if (t < 1) requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
+  })(start);
 }
 (function counters() {
   const nums = document.querySelectorAll(".stat .num[data-count]");
@@ -141,22 +253,26 @@ fetch("writeups.json")
   .then((r) => (r.ok ? r.json() : Promise.reject()))
   .then((data) => {
     const countEl = document.getElementById("stat-writeups");
-    if (countEl) { countEl.dataset.count = String(data.count); }
+    if (countEl) countEl.dataset.count = String(data.count);
     const cards = document.getElementById("cards");
     const items = data.items.slice(0, 4);
     if (!items.length) { cards.innerHTML = '<li class="card"><p>writeups coming soon.</p></li>'; return; }
-    cards.innerHTML = items.map((w) => {
+    cards.innerHTML = items.map((w, i) => {
       const tags = (w.tags || []).slice(0, 4).map((t) => `<span class="tag">${t}</span>`).join("");
       const meta = [w.section, fmtDate(w.date)].filter(Boolean).map((x) => `<span>${x}</span>`).join("");
-      return `<li class="card reveal"><a class="card-link" href="writeups/${w.slug}">
+      return `<li class="card reveal" style="--i:${i}"><a class="card-link" href="writeups/${w.slug}">
         <h3>${w.title}</h3>
         <div class="meta">${meta}</div>
         ${w.description ? `<p>${w.description}</p>` : ""}
         <div class="tags">${tags}</div>
       </a></li>`;
     }).join("");
-    // reveal the freshly-added cards
-    cards.querySelectorAll(".reveal").forEach((e, i) => setTimeout(() => e.classList.add("in"), 80 * i));
+    const newCards = cards.querySelectorAll(".reveal");
+    if (reduceMotion || !("IntersectionObserver" in window)) { newCards.forEach(reveal); return; }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { reveal(e.target); io.unobserve(e.target); } });
+    }, { threshold: 0.15 });
+    newCards.forEach((c) => io.observe(c));
   })
   .catch(() => {
     document.getElementById("cards").innerHTML = '<li class="card"><p>writeups coming soon.</p></li>';
