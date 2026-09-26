@@ -286,8 +286,8 @@ for (const { note } of activeChecks) {
 
 /* ---------- write manifest ---------- */
 manifest.version = 1;
-manifest.generatedAt = new Date().toISOString();
 manifest.notes = newNotes;
+delete manifest.generatedAt; // keep the manifest stable when nothing changed
 fs.writeFileSync(MANIFEST, JSON.stringify(manifest, null, 2) + "\n");
 
 console.log(`\n✓ vault sync: ${added.length} added, ${updated.length} updated, ${removed.length} removed`);
