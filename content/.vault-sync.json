@@ -1,6 +1,12 @@
 {
   "version": 1,
   "notes": {
+    "htb/twomillion": {
+      "source": "NOTES/repo/HTB/writeups/TwoMillion.md",
+      "files": [
+        "HTB/TwoMillion.md"
+      ]
+    },
     "lakera/solace-ai": {
       "source": "projets/ai-red-team/Lakera/Solace-AI.md",
       "files": [

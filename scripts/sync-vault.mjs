@@ -60,6 +60,21 @@ function normalizeBody(body) {
   return body.replace(/\r\n/g, "\n").split("\n").map((l) => l.replace(/[ \t]+$/g, "")).join("\n").trim();
 }
 function sha256(s) { return crypto.createHash("sha256").update(s, "utf8").digest("hex"); }
+// denylist patterns, shared with leak-check.mjs. the sealed body of an active
+// box becomes public at retirement, so it must pass this BEFORE it is sealed.
+function loadDenylist() {
+  const f = "scripts/publish-denylist.txt";
+  if (!fs.existsSync(f)) die(`missing ${f} (needed to leak-check sealed bodies)`);
+  return fs.readFileSync(f, "utf8").split("\n").map((l) => l.trim())
+    .filter((l) => l && !l.startsWith("#")).map((src) => ({ src, re: new RegExp(src, "i") }));
+}
+const DENYLIST = loadDenylist();
+function assertBodyClean(body, label) {
+  const lines = body.split("\n");
+  for (let i = 0; i < lines.length; i++)
+    for (const { src, re } of DENYLIST)
+      if (re.test(lines[i])) die(`${label} line ${i + 1} matches denylist /${src}/ and cannot be sealed`);
+}
 function walk(dir, base = dir, out = []) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
     const abs = path.join(dir, e.name);
