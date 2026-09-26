@@ -36,6 +36,7 @@ jobs:
           cp landing/index.html landing/style.css landing/app.js landing/writeups.json landing/cv.pdf public/
           mkdir -p public/data
           cp landing/data/profile.json public/data/profile.json
+          if [ -d landing/sealed ]; then mkdir -p public/sealed && cp landing/sealed/*.md public/sealed/ 2>/dev/null || true; fi
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public

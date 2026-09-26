@@ -27,6 +27,9 @@ for (const [slug, entry] of Object.entries(index)) {
     date: fm.date ? new Date(fm.date).toISOString().slice(0, 10) : null,
     section: file.split("/")[0].replace(/\.md$/, ""),
     featured: fm.featured === true,
+    locked: fm.locked === true,
+    htb: fm.htb ?? null,
+    sealed: fm.sealed ?? null,
   })
 }
 

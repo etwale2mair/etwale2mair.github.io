@@ -1,13 +1,15 @@
 ---
 title: Lakera Solace AI
-description: all five levels of Lakera's mental-health chatbot challenge, from an emotional-coercion jailbreak to slipping between an output guard and its content scorer.
+description: all five levels of Lakera's mental-health chatbot challenge, from
+  an emotional-coercion jailbreak to slipping between an output guard and its
+  content scorer.
+date: 2026-09-26
 tags:
   - ai-red-team
   - prompt-injection
   - jailbreak
   - lakera
   - owasp-llm01
-date: 2026-09-26
 featured: true
 ---
 

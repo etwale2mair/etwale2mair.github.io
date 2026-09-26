@@ -17,6 +17,19 @@ document.querySelectorAll(".theme-toggle").forEach((btn) => {
   });
 });
 
+/* ---------- copy sealed hash (delegated, works on injected cards) ---------- */
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".copy-hash");
+  if (!btn) return;
+  e.preventDefault();
+  const hash = btn.dataset.hash || "";
+  navigator.clipboard?.writeText(hash).then(() => {
+    const was = btn.textContent;
+    btn.textContent = "copied";
+    setTimeout(() => { btn.textContent = was; }, 1200);
+  }).catch(() => {});
+});
+
 /* ---------- topbar shadow + scroll progress ---------- */
 const topbar = document.querySelector(".topbar");
 const progress = document.getElementById("progress");
@@ -250,16 +263,47 @@ function fmtDate(d) {
   if (!d) return "";
   return new Date(d + "T00:00:00").toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 }
+function shortHash(h) { return h ? `${h.slice(0, 4)}…${h.slice(-4)}` : ""; }
+
+function normalCard(w) {
+  const tags = (w.tags || []).slice(0, 4).map(tag).join("");
+  const meta = [w.section, fmtDate(w.date)].filter(Boolean).map((x) => `<span>${esc(x)}</span>`).join("");
+  return `<li class="card" data-reveal><a class="card-link" href="writeups/${esc(w.slug)}">
+    <h3>${esc(w.title)}</h3>
+    <div class="meta">${meta}</div>
+    ${w.description ? `<p>${esc(w.description)}</p>` : ""}
+    <div class="tags">${tags}</div>
+  </a></li>`;
+}
+
+// active HTB box: proof, never spoilers
+function lockedCard(w) {
+  const h = w.htb || {};
+  const facts = ["owned " + esc(h.owned || ""), h.os && esc(h.os), h.difficulty && esc(h.difficulty)]
+    .filter(Boolean).join(" · ");
+  const verified = h.achievement
+    ? `<a class="verified" href="${esc(h.achievement)}" rel="noopener">verified on Hack The Box ↗</a>` : "";
+  const sealed = w.sealed && w.sealed.hash
+    ? `<span class="sealed"><span class="lbl">sealed</span> <code title="${esc(w.sealed.hash)}">${esc(shortHash(w.sealed.hash))}</code><button class="copy-hash" type="button" data-hash="${esc(w.sealed.hash)}" aria-label="copy full hash">copy</button></span>` : "";
+  return `<li class="card locked" data-reveal>
+    <a class="card-link" href="writeups/${esc(w.slug)}">
+      <div class="lock-row"><span class="lockglyph" aria-hidden="true">◆</span><h3>${esc(w.title)}</h3></div>
+      <div class="meta">${facts}</div>
+    </a>
+    <div class="lock-proof">${verified}${sealed}</div>
+  </li>`;
+}
 
 /* ---------- writeups: featured + latest list (from writeups.json) ---------- */
 fetch("writeups.json")
   .then((r) => (r.ok ? r.json() : Promise.reject()))
   .then((data) => {
+    const unlockedCount = data.items.filter((w) => !w.locked).length;
     const countEl = document.getElementById("stat-writeups");
-    if (countEl) countEl.dataset.count = String(data.count);
+    if (countEl) countEl.dataset.count = String(unlockedCount);
 
-    // featured
-    const featured = data.items.find((w) => w.featured);
+    // featured (never a locked item)
+    const featured = data.items.find((w) => w.featured && !w.locked);
     const featEl = document.getElementById("featured");
     if (featured && featEl) {
       const tags = (featured.tags || []).slice(0, 5).map(tag).join("");
@@ -275,10 +319,10 @@ fetch("writeups.json")
       watchScope(featEl);
     }
 
-    // latest list (drop the featured one only when there are enough others)
+    // latest list (drop the featured one only when there are enough unlocked others)
     let list = data.items;
-    if (data.count > 2 && featured) list = list.filter((w) => !w.featured);
-    list = list.slice(0, 4);
+    if (unlockedCount > 2 && featured) list = list.filter((w) => !w.featured);
+    list = list.slice(0, 6);
 
     const cards = document.getElementById("cards");
     if (!list.length) {
@@ -286,16 +330,7 @@ fetch("writeups.json")
       watchScope(cards);
       return;
     }
-    cards.innerHTML = list.map((w) => {
-      const tags = (w.tags || []).slice(0, 4).map(tag).join("");
-      const meta = [w.section, fmtDate(w.date)].filter(Boolean).map((x) => `<span>${esc(x)}</span>`).join("");
-      return `<li class="card" data-reveal><a class="card-link" href="writeups/${esc(w.slug)}">
-        <h3>${esc(w.title)}</h3>
-        <div class="meta">${meta}</div>
-        ${w.description ? `<p>${esc(w.description)}</p>` : ""}
-        <div class="tags">${tags}</div>
-      </a></li>`;
-    }).join("");
+    cards.innerHTML = list.map((w) => (w.locked ? lockedCard(w) : normalCard(w))).join("");
     watchScope(cards);
   })
   .catch(() => {

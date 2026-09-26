@@ -213,6 +213,21 @@ main { position: relative; z-index: 2; max-width: var(--maxw); margin: 0 auto; p
   position: relative; z-index: 2;
 }
 
+/* ---------- locked (active HTB) card ---------- */
+.card.locked { opacity: 0.92; }
+.card.locked .card-link { color: var(--muted); }
+.card.locked:hover { transform: none; box-shadow: none; border-color: var(--line); }
+.lock-row { display: flex; align-items: center; gap: 0.5rem; }
+.lock-row h3 { margin: 0; color: var(--muted); }
+.lockglyph { color: var(--dim); font-size: 0.9rem; }
+.lock-proof { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; margin-top: 0.7rem; font-family: var(--codeFont); font-size: 0.76rem; }
+.lock-proof .verified { color: var(--accent); }
+.lock-proof .sealed { color: var(--dim); display: inline-flex; align-items: center; gap: 0.4rem; }
+.lock-proof .sealed .lbl { text-transform: lowercase; }
+.lock-proof .sealed code { color: var(--muted); }
+.copy-hash { background: none; border: 1px solid var(--line); color: var(--dim); border-radius: 6px; padding: 0.05rem 0.4rem; font-family: var(--codeFont); font-size: 0.7rem; cursor: pointer; }
+.copy-hash:hover { color: var(--accent); border-color: var(--accent); }
+
 /* ---------- shared panel + grid ---------- */
 .panel {
   border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel);
