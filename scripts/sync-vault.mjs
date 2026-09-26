@@ -225,6 +225,7 @@ for (const n of published) {
     // sealed stub only: no body, no images ever written
     fmOut.featured = false; // locked items are never featured
     fmOut.tags = []; // no technique tags on active boxes: they hint the path
+    fmOut.description = "an active Hack The Box machine. the writeup is sealed and publishes when the box retires.";
     fmOut.locked = true;
     if (n.fm.htb) fmOut.htb = pickHtb(n.fm.htb);
 

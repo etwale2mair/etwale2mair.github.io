@@ -1,11 +1,77 @@
 {
   "version": 1,
   "notes": {
+    "htb/connected": {
+      "source": "NOTES/repo/HTB/writeups/Connected.md",
+      "files": [
+        "HTB/Connected.md"
+      ],
+      "sealed": {
+        "hash": "c7d1c8d26e4c7cf05dffce7cf98fa1f3547400a018a04f2ff072158574d858d5",
+        "date": "2026-09-26",
+        "commit": null
+      }
+    },
+    "htb/expressway": {
+      "source": "NOTES/repo/HTB/writeups/Expressway.md",
+      "files": [
+        "HTB/Expressway.md"
+      ],
+      "sealed": {
+        "hash": "d4a9fc21d51d0dce1ac280a0e4ec5d18008b3ac840e7031c15e7b0d86821de6e",
+        "date": "2026-09-26",
+        "commit": null
+      }
+    },
+    "htb/kobold": {
+      "source": "NOTES/repo/HTB/writeups/Kobold.md",
+      "files": [
+        "HTB/Kobold.md"
+      ],
+      "sealed": {
+        "hash": "729561a9fd1c309446f44a689282263f5aa8e983be920834be94428b08c25c12",
+        "date": "2026-09-26",
+        "commit": null
+      }
+    },
+    "htb/reactor": {
+      "source": "NOTES/repo/HTB/writeups/Reactor.md",
+      "files": [
+        "HTB/Reactor.md"
+      ],
+      "sealed": {
+        "hash": "5960559718259be6b13e645332891b272ad696a58e6587b0aae28b97fa455ee2",
+        "date": "2026-09-26",
+        "commit": null
+      }
+    },
     "htb/twomillion": {
       "source": "NOTES/repo/HTB/writeups/TwoMillion.md",
       "files": [
         "HTB/TwoMillion.md"
       ]
+    },
+    "htb/facts": {
+      "source": "NOTES/repo/HTB/writeups/facts.md",
+      "files": [
+        "HTB/facts.md"
+      ],
+      "sealed": {
+        "hash": "2f89514e347f433965023b10d519a6a9f83a49f6f953d174c25af010cc3d97fe",
+        "date": "2026-09-26",
+        "commit": null
+      }
+    },
+    "htb/soulmate": {
+      "source": "NOTES/repo/HTB/writeups/soulmate.md",
+      "files": [
+        "HTB/soulmate.md"
+      ],
+      "sealed": {
+        "hash": "3594dfa5293c55dba0d3ea8ba88fa8cb1c1261e222ed72d0c7fbceec1e8ae688",
+        "date": "2026-09-26",
+        "commit": null
+      }
     },
     "lakera/solace-ai": {
       "source": "projets/ai-red-team/Lakera/Solace-AI.md",
