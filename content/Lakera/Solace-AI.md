@@ -8,6 +8,7 @@ tags:
   - lakera
   - owasp-llm01
 date: 2026-09-26
+featured: true
 ---
 
 > target : **Solace AI**, a fictional mental-health support chatbot. 24/7 support, safe space for anxiety/depression, very non-judgy, only wants the best for you.

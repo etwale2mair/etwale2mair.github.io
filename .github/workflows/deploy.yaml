@@ -32,7 +32,10 @@ jobs:
       - name: Generate writeups index
         run: node scripts/gen-writeups-index.mjs public/writeups landing/writeups.json
       - name: Assemble landing page at root
-        run: cp landing/index.html landing/style.css landing/app.js landing/writeups.json public/
+        run: |
+          cp landing/index.html landing/style.css landing/app.js landing/writeups.json landing/cv.pdf public/
+          mkdir -p public/data
+          cp landing/data/profile.json public/data/profile.json
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public

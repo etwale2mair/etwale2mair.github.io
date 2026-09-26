@@ -235,30 +235,64 @@ function watchScope(scope) {
 }
 document.querySelectorAll("[data-reveal-scope]").forEach(watchScope);
 
-/* ---------- latest writeups (from generated writeups.json) ---------- */
+/* ---------- small helpers for injected content ---------- */
+function esc(s) {
+  return String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+}
+function chip(t) { return `<span class="chip">${esc(t)}</span>`; }
+function tag(t) { return `<span class="tag">${esc(t)}</span>`; }
+function plist(points) {
+  return points && points.length
+    ? `<ul class="plist">${points.map((p) => `<li>${esc(p)}</li>`).join("")}</ul>`
+    : "";
+}
 function fmtDate(d) {
   if (!d) return "";
   return new Date(d + "T00:00:00").toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 }
+
+/* ---------- writeups: featured + latest list (from writeups.json) ---------- */
 fetch("writeups.json")
   .then((r) => (r.ok ? r.json() : Promise.reject()))
   .then((data) => {
     const countEl = document.getElementById("stat-writeups");
     if (countEl) countEl.dataset.count = String(data.count);
+
+    // featured
+    const featured = data.items.find((w) => w.featured);
+    const featEl = document.getElementById("featured");
+    if (featured && featEl) {
+      const tags = (featured.tags || []).slice(0, 5).map(tag).join("");
+      const meta = [featured.section, fmtDate(featured.date)].filter(Boolean).map((x) => `<span>${esc(x)}</span>`).join("");
+      featEl.innerHTML = `<a class="feat-panel" data-reveal href="writeups/${esc(featured.slug)}">
+        <span class="feat-label">featured</span>
+        <h3>${esc(featured.title)}</h3>
+        <div class="feat-meta">${meta}</div>
+        ${featured.description ? `<p class="desc">${esc(featured.description)}</p>` : ""}
+        <div class="feat-foot"><div class="tags">${tags}</div><span class="feat-read">read the writeup →</span></div>
+      </a>`;
+      featEl.hidden = false;
+      watchScope(featEl);
+    }
+
+    // latest list (drop the featured one only when there are enough others)
+    let list = data.items;
+    if (data.count > 2 && featured) list = list.filter((w) => !w.featured);
+    list = list.slice(0, 4);
+
     const cards = document.getElementById("cards");
-    const items = data.items.slice(0, 4);
-    if (!items.length) {
+    if (!list.length) {
       cards.innerHTML = '<li class="card" data-reveal><p>writeups coming soon.</p></li>';
       watchScope(cards);
       return;
     }
-    cards.innerHTML = items.map((w) => {
-      const tags = (w.tags || []).slice(0, 4).map((t) => `<span class="tag">${t}</span>`).join("");
-      const meta = [w.section, fmtDate(w.date)].filter(Boolean).map((x) => `<span>${x}</span>`).join("");
-      return `<li class="card" data-reveal><a class="card-link" href="writeups/${w.slug}">
-        <h3>${w.title}</h3>
+    cards.innerHTML = list.map((w) => {
+      const tags = (w.tags || []).slice(0, 4).map(tag).join("");
+      const meta = [w.section, fmtDate(w.date)].filter(Boolean).map((x) => `<span>${esc(x)}</span>`).join("");
+      return `<li class="card" data-reveal><a class="card-link" href="writeups/${esc(w.slug)}">
+        <h3>${esc(w.title)}</h3>
         <div class="meta">${meta}</div>
-        ${w.description ? `<p>${w.description}</p>` : ""}
+        ${w.description ? `<p>${esc(w.description)}</p>` : ""}
         <div class="tags">${tags}</div>
       </a></li>`;
     }).join("");
@@ -268,4 +302,58 @@ fetch("writeups.json")
     const cards = document.getElementById("cards");
     cards.innerHTML = '<li class="card" data-reveal><p>writeups coming soon.</p></li>';
     watchScope(cards);
+  });
+
+/* ---------- profile sections (projects, experience, skills, currently) ---------- */
+fetch("data/profile.json")
+  .then((r) => (r.ok ? r.json() : Promise.reject()))
+  .then((p) => {
+    const pg = document.getElementById("projects-grid");
+    if (pg && p.projects) {
+      pg.innerHTML = p.projects.map((pr) => `<article class="panel project" data-reveal>
+        <h3>${esc(pr.name)}</h3>
+        <p class="summary">${esc(pr.summary)}</p>
+        ${plist(pr.points)}
+        <div class="stack">${(pr.stack || []).map(chip).join("")}</div>
+        ${pr.status ? `<div class="status">${esc(pr.status)}</div>` : ""}
+      </article>`).join("");
+      watchScope(pg);
+    }
+
+    const eb = document.getElementById("experience-body");
+    if (eb) {
+      const exp = (p.experience || []).map((e) => `<div class="exp" data-reveal>
+        <div class="period">${esc(e.period)}</div>
+        <h3>${esc(e.role)} · <span class="org">${esc(e.org)}</span></h3>
+        <p class="summary">${esc(e.summary)}</p>
+        ${plist(e.points)}
+      </div>`).join("");
+      const edu = (p.education || []).map((ed) => `<div class="edu-item" data-reveal>
+        <span class="e-title">${esc(ed.title)}</span>
+        <span class="e-org">${esc(ed.org)}</span>
+        <span class="e-period">${esc(ed.period)}</span>
+      </div>`).join("");
+      eb.innerHTML = `<div class="timeline">${exp}</div>` + (edu ? `<div class="edu"><div class="edu-label">education</div>${edu}</div>` : "");
+      watchScope(eb);
+    }
+
+    const sg = document.getElementById("skills-grid");
+    if (sg && p.skills) {
+      sg.innerHTML = p.skills.map((s) => `<article class="panel skill" data-reveal>
+        <h3>${esc(s.group)}</h3>
+        <div class="stack">${(s.tools || []).map(chip).join("")}</div>
+        ${s.focus ? `<p class="focus">${esc(s.focus)}</p>` : ""}
+      </article>`).join("");
+      watchScope(sg);
+    }
+
+    const cu = document.getElementById("currently");
+    if (cu && p.currently && p.currently.length) {
+      cu.innerHTML = `<div class="lbl" data-reveal>currently</div><ul class="plist">${p.currently.map((c) => `<li data-reveal>${esc(c)}</li>`).join("")}</ul>`;
+      watchScope(cu);
+    }
+  })
+  .catch(() => {
+    ["projects", "experience", "skills"].forEach((id) => { const el = document.getElementById(id); if (el) el.hidden = true; });
+    const cu = document.getElementById("currently"); if (cu) cu.hidden = true;
   });

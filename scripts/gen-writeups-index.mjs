@@ -26,6 +26,7 @@ for (const [slug, entry] of Object.entries(index)) {
     tags: fm.tags ?? [],
     date: fm.date ? new Date(fm.date).toISOString().slice(0, 10) : null,
     section: file.split("/")[0].replace(/\.md$/, ""),
+    featured: fm.featured === true,
   })
 }
 

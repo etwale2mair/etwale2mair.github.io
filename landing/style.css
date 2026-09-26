@@ -213,6 +213,68 @@ main { position: relative; z-index: 2; max-width: var(--maxw); margin: 0 auto; p
   position: relative; z-index: 2;
 }
 
+/* ---------- shared panel + grid ---------- */
+.panel {
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel);
+  transition: border-color .25s var(--ease), transform .25s var(--ease), box-shadow .25s var(--ease);
+}
+.panel:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); transform: translateY(-3px); box-shadow: 0 14px 40px -26px var(--accent); }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+
+/* accent-marker list, shared by projects / currently */
+.plist { list-style: none; margin: 0.7rem 0 0; padding: 0; display: grid; gap: 0.4rem; }
+.plist li { position: relative; padding-left: 1rem; color: var(--muted); font-size: 0.92rem; line-height: 1.5; }
+.plist li::before { content: ""; position: absolute; left: 0; top: 0.6em; width: 6px; height: 6px; border-radius: 2px; background: var(--accent); }
+
+/* ---------- featured writeup ---------- */
+.featured { margin-bottom: 1rem; }
+.featured[hidden] { display: none; }
+.feat-panel {
+  display: block; color: var(--text); padding: clamp(1.4rem, 4vw, 2.2rem);
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel);
+  transition: border-color .25s var(--ease), transform .25s var(--ease), box-shadow .25s var(--ease);
+}
+.feat-panel:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); transform: translateY(-3px); box-shadow: 0 20px 60px -30px var(--accent); text-decoration: none; }
+.feat-label { font-family: var(--codeFont); font-size: 0.72rem; color: var(--accent); letter-spacing: .08em; text-transform: uppercase; }
+.feat-panel h3 { font-size: clamp(1.3rem, 3.5vw, 1.6rem); margin: 0.5rem 0 0.3rem; }
+.feat-meta { font-family: var(--codeFont); font-size: 0.75rem; color: var(--dim); display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.7rem; }
+.feat-panel .desc { color: var(--muted); margin: 0 0 0.9rem; max-width: 72ch; }
+.feat-foot { display: flex; align-items: center; justify-content: space-between; gap: 0.7rem 1rem; flex-wrap: wrap; }
+.feat-read { font-family: var(--codeFont); font-size: 0.85rem; color: var(--accent); }
+
+/* ---------- projects ---------- */
+.project { padding: 1.2rem 1.3rem; display: flex; flex-direction: column; }
+.project h3 { font-size: 1.2rem; margin: 0 0 0.3rem; }
+.project .summary { color: var(--muted); font-size: 0.95rem; margin: 0; }
+.project .stack { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.9rem; }
+.project .status { margin-top: 0.8rem; font-family: var(--codeFont); font-size: 0.72rem; color: var(--dim); }
+
+/* ---------- experience timeline ---------- */
+.timeline { position: relative; padding-left: 1.5rem; }
+.timeline::before { content: ""; position: absolute; left: 0; top: 0.4rem; bottom: 0.4rem; width: 1px; background: var(--line); }
+.exp { position: relative; padding-bottom: 1.6rem; }
+.exp::before { content: ""; position: absolute; left: -1.5rem; top: 0.4rem; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); transform: translateX(-4px); }
+.exp .period { font-family: var(--codeFont); font-size: 0.72rem; color: var(--dim); }
+.exp h3 { font-size: 1.05rem; margin: 0.2rem 0 0.35rem; }
+.exp h3 .org { color: var(--accent); }
+.exp .summary { color: var(--muted); font-size: 0.92rem; margin: 0; }
+.edu { margin-top: 0.4rem; }
+.edu-label { font-family: var(--codeFont); font-size: 0.72rem; color: var(--dim); letter-spacing: .04em; margin-bottom: 0.6rem; }
+.edu-item { display: flex; gap: 0.4rem 0.9rem; flex-wrap: wrap; align-items: baseline; font-size: 0.9rem; color: var(--muted); padding: 0.3rem 0; border-top: 1px solid var(--line); }
+.edu-item .e-org { color: var(--text); }
+.edu-item .e-period { font-family: var(--codeFont); font-size: 0.74rem; color: var(--dim); margin-left: auto; }
+
+/* ---------- skills ---------- */
+.skill { padding: 1.1rem 1.2rem; }
+.skill h3 { font-size: 1.05rem; margin: 0 0 0.6rem; }
+.skill .stack { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.skill .focus { margin: 0.7rem 0 0; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+
+/* ---------- currently ---------- */
+.currently { margin-top: 1.4rem; }
+.currently .lbl { font-family: var(--codeFont); font-size: 0.72rem; color: var(--dim); letter-spacing: .04em; }
+.currently .plist { margin-top: 0.5rem; }
+
 /* ---------- scroll reveal ---------- */
 /* hidden only when JS runs, so the page is readable without it */
 .js [data-reveal] { opacity: 0; }
