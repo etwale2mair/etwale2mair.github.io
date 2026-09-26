@@ -14,20 +14,20 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap" />
   <link rel="stylesheet" href="style.css" />
   <script>
+    document.documentElement.classList.add("js");
     try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t } catch {}
   </script>
 </head>
 <body>
   <div class="progress" aria-hidden="true"><span id="progress"></span></div>
-  <div class="grain" aria-hidden="true"></div>
 
   <header class="topbar">
     <a class="brand" href="#top">etwale<span class="caret">_</span></a>
     <nav>
       <a href="#work">writeups</a>
       <a href="#about">about</a>
-      <a href="https://www.linkedin.com/in/duy-lam-l" rel="noopener">linkedin</a>
-      <a href="https://github.com/etwale2mair" rel="noopener">github</a>
+      <a class="nav-ext" href="https://www.linkedin.com/in/duy-lam-l" rel="noopener">linkedin</a>
+      <a class="nav-ext" href="https://github.com/etwale2mair" rel="noopener">github</a>
       <button class="theme-toggle" type="button" aria-label="toggle light/dark theme">◐</button>
     </nav>
   </header>
@@ -45,45 +45,45 @@
   </section>
 
   <main>
-    <section class="stats" id="stats" aria-label="stats">
-      <div class="stat reveal" style="--i:0"><div class="num" data-count="109">109</div><div class="label">root-me challenges</div></div>
-      <div class="stat reveal" style="--i:1"><div class="num" data-count="5" data-suffix="/5">5/5</div><div class="label">lakera solace</div></div>
-      <div class="stat reveal" style="--i:2"><div class="num" id="stat-writeups" data-count="1">1</div><div class="label">writeups</div></div>
-      <div class="stat reveal" style="--i:3"><div class="num">CPTS</div><div class="label">in progress</div></div>
+    <section class="stats" id="stats" aria-label="stats" data-reveal-scope>
+      <div class="stat" data-reveal><div class="num" data-count="109">109</div><div class="label">root-me challenges</div></div>
+      <div class="stat" data-reveal><div class="num" data-count="5" data-suffix="/5">5/5</div><div class="label">lakera solace</div></div>
+      <div class="stat" data-reveal><div class="num" id="stat-writeups" data-count="1">1</div><div class="label">writeups</div></div>
+      <div class="stat" data-reveal><div class="num">CPTS</div><div class="label">in progress</div></div>
     </section>
 
-    <section class="block" id="work">
-      <div class="block-head reveal">
+    <section class="block" id="work" data-reveal-scope>
+      <div class="block-head" data-reveal>
         <h2><span class="idx">01</span><span class="h-text">latest writeups</span></h2>
         <a href="writeups/">all writeups →</a>
       </div>
-      <ol class="cards" id="cards"></ol>
+      <ol class="cards" id="cards" data-reveal-scope></ol>
     </section>
 
-    <section class="block" id="about">
-      <div class="block-head reveal"><h2><span class="idx">02</span><span class="h-text">about</span></h2></div>
+    <section class="block" id="about" data-reveal-scope>
+      <div class="block-head" data-reveal><h2><span class="idx">02</span><span class="h-text">about</span></h2></div>
       <div class="about-grid">
-        <p class="reveal soft" style="--i:0">master's in cybersecurity from OTERIA, currently a cybersecurity analyst at Docaposte. I practice on Root-Me and HackTheBox, and I'm specialising in AI security.</p>
-        <p class="reveal soft" style="--i:1">every writeup follows how I actually worked: what I understood, what I guessed, what I tested, what confirmed it. HackTheBox writeups only go up once a box is retired.</p>
+        <p data-reveal>master's in cybersecurity from OTERIA, currently a cybersecurity analyst at Docaposte. I practice on Root-Me and HackTheBox, and I'm specialising in AI security.</p>
+        <p data-reveal>every writeup follows how I actually worked: what I understood, what I guessed, what I tested, what confirmed it. HackTheBox writeups only go up once a box is retired.</p>
       </div>
-      <div class="chips reveal-group">
-        <span class="chip">web</span><span class="chip">active directory</span><span class="chip">cloud</span><span class="chip">AI security</span><span class="chip">root-me</span><span class="chip">hackthebox</span>
+      <div class="chips" data-reveal-scope>
+        <span class="chip" data-reveal>web</span><span class="chip" data-reveal>active directory</span><span class="chip" data-reveal>cloud</span><span class="chip" data-reveal>AI security</span><span class="chip" data-reveal>root-me</span><span class="chip" data-reveal>hackthebox</span>
       </div>
     </section>
 
-    <section class="block contact" id="contact">
-      <div class="block-head center reveal"><h2><span class="idx">03</span><span class="h-text">let's talk</span></h2></div>
+    <section class="block contact" id="contact" data-reveal-scope>
+      <div class="block-head center" data-reveal><h2><span class="idx">03</span><span class="h-text">let's talk</span></h2></div>
       <div class="cta-row">
-        <a class="btn primary reveal" style="--i:0" href="https://www.linkedin.com/in/duy-lam-l" rel="noopener">linkedin →</a>
-        <a class="btn reveal" style="--i:1" href="https://github.com/etwale2mair" rel="noopener">github</a>
-        <a class="btn reveal" style="--i:2" href="writeups/">writeups</a>
+        <a class="btn primary" data-reveal href="https://www.linkedin.com/in/duy-lam-l" rel="noopener">linkedin →</a>
+        <a class="btn" data-reveal href="https://github.com/etwale2mair" rel="noopener">github</a>
+        <a class="btn" data-reveal href="writeups/">writeups</a>
       </div>
     </section>
   </main>
 
-  <footer class="footer reveal fade">
-    <span>© <span id="year"></span> Duy-Lam Lê-Vo</span>
-    <span>built with <a href="https://quartz.jzhao.xyz/" rel="noopener">Quartz</a> + hand-rolled html</span>
+  <footer class="footer" data-reveal-scope>
+    <span data-reveal>© <span id="year"></span> Duy-Lam Lê-Vo</span>
+    <span data-reveal>built with <a href="https://quartz.jzhao.xyz/" rel="noopener">Quartz</a> + hand-rolled html</span>
   </footer>
 
   <script src="app.js" defer></script>

@@ -29,23 +29,6 @@ function onScroll() {
 addEventListener("scroll", onScroll, { passive: true });
 onScroll();
 
-/* ---------- E. film grain (generated once, tiled) ---------- */
-(function grain() {
-  const layer = document.querySelector(".grain");
-  if (!layer || reduceMotion) return;
-  const s = 120, c = document.createElement("canvas");
-  c.width = c.height = s;
-  const g = c.getContext("2d");
-  const img = g.createImageData(s, s);
-  for (let i = 0; i < img.data.length; i += 4) {
-    const v = (Math.random() * 255) | 0;
-    img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
-    img.data[i + 3] = 255;
-  }
-  g.putImageData(img, 0, 0);
-  layer.style.backgroundImage = `url(${c.toDataURL("image/png")})`;
-})();
-
 /* ---------- A. decode the handle letter by letter ---------- */
 (function decode() {
   const el = document.getElementById("handle");
@@ -184,7 +167,11 @@ onScroll();
     raf = requestAnimationFrame(draw);
   }
   resize(); draw();
-  addEventListener("resize", () => { cancelAnimationFrame(raf); resize(); draw(); });
+  let rz;
+  addEventListener("resize", () => {
+    clearTimeout(rz);
+    rz = setTimeout(() => { cancelAnimationFrame(raf); resize(); draw(); }, 150);
+  });
 })();
 
 /* ---------- hero title typewriter ---------- */
@@ -207,22 +194,6 @@ onScroll();
   setTimeout(step, 1400);
 })();
 
-/* ---------- reveal on scroll ---------- */
-function reveal(el) {
-  el.classList.add("in");
-  // stagger children that opt in
-  el.querySelectorAll(".tag").forEach((t, i) => t.style.setProperty("--t", i));
-  el.querySelectorAll(".chip").forEach((t, i) => t.style.setProperty("--t", i));
-}
-(function watch() {
-  const els = document.querySelectorAll(".reveal, .reveal-group");
-  if (reduceMotion || !("IntersectionObserver" in window)) { els.forEach(reveal); return; }
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((e) => { if (e.isIntersecting) { reveal(e.target); io.unobserve(e.target); } });
-  }, { threshold: 0.15 });
-  els.forEach((e) => io.observe(e));
-})();
-
 /* ---------- animated counters ---------- */
 function animateCount(el) {
   const target = parseInt(el.dataset.count || "0", 10);
@@ -235,14 +206,34 @@ function animateCount(el) {
     if (t < 1) requestAnimationFrame(tick);
   })(start);
 }
-(function counters() {
-  const nums = document.querySelectorAll(".stat .num[data-count]");
-  if (!("IntersectionObserver" in window)) { nums.forEach(animateCount); return; }
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((e) => { if (e.isIntersecting) { animateCount(e.target); io.unobserve(e.target); } });
-  }, { threshold: 0.5 });
-  nums.forEach((n) => io.observe(n));
-})();
+
+/* ---------- scroll reveal: scope by scope, items in DOM order ---------- */
+const STAGGER_CAP = 8;
+function ownItems(scope) {
+  return [...scope.querySelectorAll("[data-reveal]")]
+    .filter((el) => el.closest("[data-reveal-scope]") === scope);
+}
+function showScope(scope) {
+  ownItems(scope).forEach((el, i) => {
+    el.style.setProperty("--i", Math.min(i, STAGGER_CAP));
+    el.classList.add("in");
+    el.querySelectorAll("[data-count]").forEach(animateCount);
+  });
+}
+const revealIO = !reduceMotion && "IntersectionObserver" in window
+  ? new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        showScope(e.target);
+        revealIO.unobserve(e.target);
+      }
+    }, { rootMargin: "0px 0px -12% 0px" })
+  : null;
+function watchScope(scope) {
+  if (revealIO) revealIO.observe(scope);
+  else showScope(scope);
+}
+document.querySelectorAll("[data-reveal-scope]").forEach(watchScope);
 
 /* ---------- latest writeups (from generated writeups.json) ---------- */
 function fmtDate(d) {
@@ -256,24 +247,25 @@ fetch("writeups.json")
     if (countEl) countEl.dataset.count = String(data.count);
     const cards = document.getElementById("cards");
     const items = data.items.slice(0, 4);
-    if (!items.length) { cards.innerHTML = '<li class="card"><p>writeups coming soon.</p></li>'; return; }
-    cards.innerHTML = items.map((w, i) => {
+    if (!items.length) {
+      cards.innerHTML = '<li class="card" data-reveal><p>writeups coming soon.</p></li>';
+      watchScope(cards);
+      return;
+    }
+    cards.innerHTML = items.map((w) => {
       const tags = (w.tags || []).slice(0, 4).map((t) => `<span class="tag">${t}</span>`).join("");
       const meta = [w.section, fmtDate(w.date)].filter(Boolean).map((x) => `<span>${x}</span>`).join("");
-      return `<li class="card reveal" style="--i:${i}"><a class="card-link" href="writeups/${w.slug}">
+      return `<li class="card" data-reveal><a class="card-link" href="writeups/${w.slug}">
         <h3>${w.title}</h3>
         <div class="meta">${meta}</div>
         ${w.description ? `<p>${w.description}</p>` : ""}
         <div class="tags">${tags}</div>
       </a></li>`;
     }).join("");
-    const newCards = cards.querySelectorAll(".reveal");
-    if (reduceMotion || !("IntersectionObserver" in window)) { newCards.forEach(reveal); return; }
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => { if (e.isIntersecting) { reveal(e.target); io.unobserve(e.target); } });
-    }, { threshold: 0.15 });
-    newCards.forEach((c) => io.observe(c));
+    watchScope(cards);
   })
   .catch(() => {
-    document.getElementById("cards").innerHTML = '<li class="card"><p>writeups coming soon.</p></li>';
+    const cards = document.getElementById("cards");
+    cards.innerHTML = '<li class="card" data-reveal><p>writeups coming soon.</p></li>';
+    watchScope(cards);
   });
