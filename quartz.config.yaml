@@ -16,30 +16,30 @@ configuration:
     fontOrigin: googleFonts
     cdnCaching: true
     typography:
-      header: Schibsted Grotesk
-      body: Source Sans Pro
-      code: IBM Plex Mono
+      header: Space Grotesk
+      body: Inter
+      code: JetBrains Mono
     colors:
       lightMode:
-        light: "#faf8f8"
-        lightgray: "#e5e5e5"
-        gray: "#b8b8b8"
-        darkgray: "#4e4e4e"
-        dark: "#2b2b2b"
-        secondary: "#284b63"
-        tertiary: "#84a59d"
-        highlight: rgba(143, 159, 169, 0.15)
-        textHighlight: "#fff23688"
+        light: "#fbfaf7"
+        lightgray: "#e7e3da"
+        gray: "#9a958a"
+        darkgray: "#3b3a36"
+        dark: "#1a1916"
+        secondary: "#b86e00"
+        tertiary: "#e08e0b"
+        highlight: rgba(184, 110, 0, 0.10)
+        textHighlight: "#f5a52455"
       darkMode:
-        light: "#161618"
-        lightgray: "#393639"
-        gray: "#646464"
-        darkgray: "#d4d4d4"
-        dark: "#ebebec"
-        secondary: "#7b97aa"
-        tertiary: "#84a59d"
-        highlight: rgba(143, 159, 169, 0.15)
-        textHighlight: "#b3aa0288"
+        light: "#0f1117"
+        lightgray: "#262a36"
+        gray: "#6b7180"
+        darkgray: "#c9ccd6"
+        dark: "#eef0f5"
+        secondary: "#f5a524"
+        tertiary: "#ffcf70"
+        highlight: rgba(245, 165, 36, 0.10)
+        textHighlight: "#f5a52455"
 plugins:
   - source: "@quartz-community/created-modified-date"
     enabled: true
@@ -100,6 +100,12 @@ plugins:
     order: 92
   - source: "@quartz-community/quartz-fonts"
     enabled: true
+    options:
+      fontOrigin: local
+      title: '"Space Grotesk", "Inter", system-ui, sans-serif'
+      header: '"Space Grotesk", "Inter", system-ui, sans-serif'
+      body: '"Inter", system-ui, sans-serif'
+      code: '"JetBrains Mono", ui-monospace, monospace'
   - source: "@quartz-themes/core"
     enabled: false
     options:
@@ -136,7 +142,7 @@ plugins:
       position: left
       priority: 50
   - source: "@quartz-community/graph"
-    enabled: true
+    enabled: false
     layout:
       position: right
       priority: 10
@@ -164,7 +170,7 @@ plugins:
       position: beforeBody
       priority: 20
   - source: "@quartz-community/tag-list"
-    enabled: false
+    enabled: true
     layout:
       position: beforeBody
       priority: 30
@@ -230,7 +236,7 @@ plugins:
         - tags
         - aliases
       excludedProperties: []
-      hidePropertiesView: false
+      hidePropertiesView: true
       delimiters: ---
       language: yaml
     order: 5
