@@ -34,7 +34,7 @@ The route list also shows an admin section: a `GET /api/v1/admin/auth` that just
 { "email": "bob@bob.bob", "is_admin": 1 }
 ```
 
-Nothing stops a regular user from sending `is_admin: 1`. The server writes it. `admin/auth` now says i am admin. This is mass assignment: the endpoint binds request fields to the account without an allow-list, so a privileged flag rides in on a request the user fully controls.
+Nothing stops a regular user from sending `is_admin: 1`. The server writes it. `admin/auth` now says i am admin. This is mass assignment: the endpoint binds request fields to the account without an allow-list, so a privileged flag gets set through a request the user fully controls.
 
 ## Foothold: command injection in the vpn generator
 
@@ -61,7 +61,7 @@ The mail hint plus the kernel version point at **CVE-2023-0386**, an OverlayFS l
 
 ## Takeaways
 
-- A route list endpoint is a map of the attack surface. Read it first.
+- A route list endpoint spells out the whole attack surface. Read it first.
 - Mass assignment is the quiet one here: no injection, no payload, just a field the server should have ignored. Always allow-list what a request may set on an account.
 - An admin feature that shells out with user input is still command injection. Being admin is not authorisation to run code.
 - Credentials in `.env` plus reuse is the classic web-to-system pivot.

@@ -1,8 +1,8 @@
 ---
 title: "PortSwigger: LLM APIs and OS command injection"
 description: "PortSwigger Web LLM lab: the newsletter API the assistant can call
-  builds a shell command from the email argument, so command substitution turns
-  it into RCE and deletes a file."
+  shoves the email argument into a shell command, so $(...) in the email turns
+  into RCE and deletes a file."
 date: 2026-09-27
 tags:
   - ai-red-team
@@ -13,68 +13,66 @@ tags:
 featured: false
 ---
 
-> target : PortSwigger Web Security Academy lab, "Exploiting vulnerabilities in LLM APIs".
-> the goal : delete `/home/carlos/morale.txt`.
-> the path : the shop assistant can call a newsletter API, that API builds a shell command from the email argument without sanitising it, so `$(...)` command substitution in the email gives me code execution as carlos.
+> target : PortSwigger lab "Exploiting vulnerabilities in LLM APIs".
+> goal : delete `/home/carlos/morale.txt`.
+> path : the shop assistant can call a newsletter API that shoves the email argument into a shell command, so `$(...)` in the email turns into RCE as carlos.
 
-## Mapping the attack surface
+## Mapping the APIs
 
-First I ask the assistant which APIs it has access to and what arguments each one takes. It lists three: password reset, newsletter subscription, and product info.
+First i ask the assistant which APIs it has and what arguments each one takes, to map the attack surface. Three of them: password reset, newsletter subscription, product info. The password reset needs an account i don't have, so the newsletter is the comfy first target. And to nuke a file i'm going to want code execution, which is exactly the kind of thing a mail-sending backend tends to hand you.
 
-The password reset needs an account i don't have, so it is awkward to test. The newsletter subscription is the better first target: it takes an email address, and to delete a file i am going to need code execution, which is exactly the kind of thing an email-sending backend can leak (these APIs often shell out to a mail command).
+## Does the assistant actually hit the API?
 
-## Proving the LLM really calls the API
-
-Before anything clever, i want to confirm the assistant actually reaches the backend. I reached for a throwaway temp inbox first out of habit:
+Before getting fancy, let's check the assistant really reaches the backend. Old reflex, i grabbed a throwaway inbox first:
 
 ![](images/llm-api-command-injection-1.png)
 
-Then i noticed the lab already hands you an email client on the exploit server, which is where confirmations land:
+Then i clocked that the lab already gives you an email client on the exploit server, which is where confirmations land:
 
 ![](images/llm-api-command-injection-2.png)
 
-So i ask the assistant to subscribe `attacker@YOUR-EXPLOIT-SERVER.exploit-server.net`, and a confirmation email shows up in that client:
+So i ask it to subscribe `attacker@YOUR-EXPLOIT-SERVER.exploit-server.net`, and a confirmation drops right into that client:
 
 ![](images/llm-api-command-injection-3.png)
 
-That confirms the loop: my words in the chat become a real newsletter API call, and the result is observable in the email client. The email recipient is now my oracle.
+Good. My chat message became a real API call, and whatever comes out shows up in the email client. That's all i need.
 
-## Testing the email argument
+## Time to try something stinky
 
-The email string is user input that ends up in whatever command the backend runs to send the mail. So i try to smuggle a shell command into it with `$(...)`, which the shell evaluates before running the real command:
+The email string is user input that ends up inside whatever command the backend runs to send the mail. So let's smuggle a shell command in with `$(...)`, which the shell runs first and swaps for its output. I subscribe `$(id)@...`:
 
 ![](images/llm-api-command-injection-4.png)
 
-I subscribe `$(id)@...exploit-server.net`. If the backend passes this through a shell, `id` runs and its output replaces `$(id)` in the recipient. And it does:
+If it shells out, `id` runs and its output replaces `$(id)` in the recipient. And it does:
 
 ![](images/llm-api-command-injection-5.png)
 
-The email came in addressed to `uid=12002(carlos) gid=12002(carlos) groups=12002(carlos)@...`. Confirmed OS command injection, and i am running as carlos. The output of my command lands in the recipient field, so the email client is a clean read channel for a blind RCE.
+The mail landed addressed to `uid=12002(carlos) gid=12002(carlos) groups=12002(carlos)@...`. Confirmed OS command injection, and we're running as carlos. Nice bonus: since the command output becomes the recipient, i can read the stdout of a blind RCE straight from the email client.
 
-## Finding the file
+## Where are we?
 
-I need to know where i am before deleting anything, so i send `$(pwd)@...`:
+Need to know where i'm standing before deleting anything, so `$(pwd)@...`:
 
 ![](images/llm-api-command-injection-6.png)
 
-The confirmation comes back addressed to `/home/carlos@...`, so the working directory is already carlos' home, where `morale.txt` lives:
+Comes back addressed to `/home/carlos@...`, so we're already sitting in carlos' home, right where morale.txt lives 👀
 
 ![](images/llm-api-command-injection-7.png)
 
-## Deleting morale.txt
+## Delete that thing
 
-Since pwd is already `/home/carlos`, a relative path is enough. I subscribe `$(rm morale.txt)@...`:
+pwd is already `/home/carlos`, so a relative path does the job. I subscribe `$(rm morale.txt)@...`:
 
 ![](images/llm-api-command-injection-8.png)
 
-The assistant complains that the email address is invalid, which actually makes sense: `rm` prints nothing, so the substitution leaves an empty local part and the address is malformed. The command still ran before the address was validated, and the solved banner pops:
+The assistant whines that the email is invalid, which actually tracks: `rm` prints nothing, so the local part is empty and the address is junk. But the command already ran before the address got validated, and the solved banner pops. we did it.
 
 ![](images/llm-api-command-injection-9.png)
 
-## What I take from it
+## What i take from it
 
-The assistant never did anything wrong, it just relayed my argument to the newsletter API. The bug is downstream: that API builds a shell command out of the email string, so classic `$(...)` command injection applies. The LLM was a tunnel to a command injection i could not reach directly.
+The assistant did nothing wrong, it just passed my argument along to the newsletter API. The real bug is downstream: that API builds a shell command out of the email string, so plain old `$(...)` command injection lands. The LLM was just a tunnel to a command injection i couldn't reach directly.
 
-The neat part was the email recipient doubling as an output channel. The RCE is blind on the server, but every command's stdout comes back as the address the confirmation is sent to, so `$(id)` and `$(pwd)` read the system out loud. Once pwd showed `/home/carlos`, deleting the file was one relative `rm`.
+The handy part is that each command's output comes back as the recipient address, so `$(id)` and `$(pwd)` let me read the box even though the RCE gives nothing back directly. Once pwd showed `/home/carlos`, deleting the file was one relative `rm`.
 
-Two labs, two different lessons on the same surface. The excessive agency one was a tool that should not have existed (raw SQL). This one is a legitimate tool with a vulnerable implementation (shell injection). Same fix direction either way: whatever the model can call has to be safe on its own, because the model will call it.
+Two labs, same surface, different lessons. Excessive agency was a tool that should never have existed (raw SQL). This one is a legit tool with a busted implementation (shell injection). Same fix direction either way: whatever the model can call has to be safe on its own, because it will get called.

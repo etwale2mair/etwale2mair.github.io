@@ -172,7 +172,7 @@ That got me to 88, over the line. 22 tries total for the whole level, most of th
 
 ### What I take from it
 
-The whole exploit lives in the **gap between two classifiers**. The output guard flags what it recognizes as profane, the scorer counts what it recognizes as profane, and those two recognizers don't have the same threshold. Everything I did was hunting for spellings that fall inside one set but outside the other. The acronym-from-principles thing also meant I never typed the words myself, so the input guard had nothing to catch on that side either.
+The whole exploit is in the **gap between two classifiers**. The output guard flags what it recognizes as profane, the scorer counts what it recognizes as profane, and those two recognizers don't have the same threshold. Everything I did was hunting for spellings that fall inside one set but outside the other. The acronym-from-principles thing also meant I never typed the words myself, so the input guard had nothing to catch on that side either.
 
 ---
 
