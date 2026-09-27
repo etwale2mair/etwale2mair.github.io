@@ -7,7 +7,7 @@
         "HTB/Connected.md"
       ],
       "sealed": {
-        "hash": "df8d50f45031890829acddbf1c650e91a4e56ffec8210da8daceac8ef7a9fcfa",
+        "hash": "3025cc389ade094c6bfade12a4443287cae074bace045375eaf0867fb5b0ca50",
         "date": "2026-09-27",
         "commit": null
       }
@@ -57,7 +57,7 @@
         "HTB/facts.md"
       ],
       "sealed": {
-        "hash": "7af8eae970b782f40365a084675ce9de987fddca72c407d74beb4622ba0e93b3",
+        "hash": "446b153d264fb3a178748d8a3273df8bc50fbf4078aea8c2321c6cbadd92c416",
         "date": "2026-09-27",
         "commit": null
       }

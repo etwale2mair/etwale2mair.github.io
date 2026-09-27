@@ -41,10 +41,8 @@ DELETE FROM users WHERE username='carlos'
 
 It called `debug_sql` with that, no embellishment, and it went through. Carlos is gone, lab solved.
 
-The lesson I take from it: with a tool this powerful, the winning move was to be more precise, not more clever. Every bit of narrative I added gave the model room to "help" and mangle the query. Hand it the exact command and the excessive tool does the rest.
-
 ## What I take from it
 
-The whole thing was excessive agency, not a jailbreak. I burned time posing as admin and doing "ignore previous instructions" when none of that was the point: the real problem is that a shop's support bot could run raw SQL at all. No system prompt fixes that, you just don't hand a chatbot a delete-users button.
+This one was all about excessive agency. I burned time posing as admin and doing "ignore previous instructions", but the model's behaviour was never the weak spot. The weak spot was the tool: a shop's support bot could run raw SQL at all. No system prompt fixes that, you just don't hand a chatbot a delete-users button.
 
-The funny part is the model being helpful got in my way more than any guardrail did. My "inactive user" story made it bolt on `AND active='false'` and error out. Dropping the story and handing it the exact query was the whole trick. In OWASP terms that is LLM06, not LLM01, and the fix lives in the tools you expose, not in the prompt.
+The part that actually slowed me down was the model trying to be helpful. My "inactive user" story made it bolt on `AND active='false'` and error out every time. I dropped the story, handed it the exact query, and it ran. With a tool that powerful, being precise beat being clever. In OWASP terms this is LLM06 excessive agency, and the fix lives in the tools you expose.
