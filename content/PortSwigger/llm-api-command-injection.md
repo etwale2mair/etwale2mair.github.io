@@ -24,19 +24,19 @@ First i ask the assistant which APIs it has and what arguments each one takes, t
 - newsletter subscription
 - product info
 
-The password reset needs an account i don't have, so the newsletter is the comfy first target. And to nuke a file i'm going to want code execution, which is exactly the kind of thing a mail-sending backend tends to hand you.
+The password reset needs an account i don't have, so the newsletter is the easier first target. And to delete a file i'm going to need code execution, which is exactly the kind of thing a mail-sending backend can hand you.
 
 ## Does the assistant actually hit the API?
 
-Before getting fancy, let's check the assistant really reaches the backend. Old reflex, i grabbed a throwaway inbox first:
+First i want to check the assistant actually reaches the backend. I tried a throwaway inbox first:
 
 ![](images/llm-api-command-injection-1.png)
 
-Then i clocked that the lab already gives you an email client on the exploit server, which is where confirmations land:
+Then i saw the lab already gives you an email client on the exploit server, which is where confirmations land:
 
 ![](images/llm-api-command-injection-2.png)
 
-So i ask it to subscribe `attacker@YOUR-EXPLOIT-SERVER.exploit-server.net`, and a confirmation drops right into that client:
+So i ask it to subscribe `attacker@YOUR-EXPLOIT-SERVER.exploit-server.net`, and a confirmation shows up in that client:
 
 ![](images/llm-api-command-injection-3.png)
 
@@ -70,7 +70,7 @@ pwd is already `/home/carlos`, so a relative path does the job. I subscribe `$(r
 
 ![](images/llm-api-command-injection-8.png)
 
-The assistant whines that the email is invalid, which actually tracks: `rm` prints nothing, so the local part is empty and the address is junk. But the command already ran before the address got validated, and the solved banner pops. we did it.
+The assistant says the email is invalid, which actually makes sense: `rm` prints nothing, so the local part is empty and the address is malformed. But the command already ran before the address got validated, and the solved banner pops. we did it.
 
 ![](images/llm-api-command-injection-9.png)
 
@@ -80,4 +80,4 @@ The assistant did nothing wrong, it just passed my argument along to the newslet
 
 The handy part is that each command's output comes back as the recipient address, so `$(id)` and `$(pwd)` let me read the box even though the RCE gives nothing back directly. Once pwd showed `/home/carlos`, deleting the file was one relative `rm`.
 
-Two labs, same surface, different lessons. Excessive agency was a tool that should never have existed (raw SQL). This one is a legit tool with a busted implementation (shell injection). Same fix direction either way: whatever the model can call has to be safe on its own, because it will get called.
+Two labs, same surface, different lessons. Excessive agency was a tool that should never have existed (raw SQL). This one is a legitimate tool with a vulnerable implementation (shell injection). Same fix direction either way: whatever the model can call has to be safe on its own, because it will get called.
