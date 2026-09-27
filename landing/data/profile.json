@@ -2,27 +2,37 @@
   "projects": [
     {
       "name": "PENTEX",
-      "summary": "a local RAG knowledge base over my own pentest notes. ask in natural language, get answers grounded in my Obsidian vault, running fully on-premises.",
+      "summary": "A local RAG knowledge base over my own pentest notes. Ask in natural language, get answers grounded in my Obsidian vault, running fully on-premises.",
       "points": [
         "FastAPI backend with a natural-language query API",
-        "local models via Ollama: nomic-embed-text for embeddings, qwen2.5 for answers",
-        "vault watcher re-indexes notes on change",
-        "web UI to ask and read sourced answers"
+        "Local models via Ollama: nomic-embed-text for embeddings, qwen2.5 for answers",
+        "Vault watcher re-indexes notes on change",
+        "Web UI to ask and read sourced answers"
       ],
-      "stack": ["Python", "FastAPI", "Ollama", "RAG"],
-      "status": "v1, milestones 1 to 3 done"
+      "stack": [
+        "Python",
+        "FastAPI",
+        "Ollama",
+        "RAG"
+      ],
+      "status": "V1, milestones 1 to 3 done"
     },
     {
       "name": "WAF bypass corpus",
-      "summary": "a structured corpus of WAF bypass payloads that stays reusable across engagements. one source of truth, all wordlists generated from it.",
+      "summary": "A structured corpus of WAF bypass payloads that stays reusable across engagements. One source of truth, all wordlists generated from it.",
       "points": [
-        "single JSONL source of truth, wordlists are generated, never hand-edited",
-        "each entry carries dated empirical results per WAF (bypass, blocked, partial)",
-        "generated wordlists load straight into ffuf, Burp Intruder, wfuzz, nuclei",
-        "payloads tagged by class and technique for targeted fuzzing"
+        "Single JSONL source of truth, wordlists are generated, never hand-edited",
+        "Each entry carries dated empirical results per WAF (bypass, blocked, partial)",
+        "Generated wordlists load straight into ffuf, Burp Intruder, wfuzz, nuclei",
+        "Payloads tagged by class and technique for targeted fuzzing"
       ],
-      "stack": ["Python", "JSONL", "ffuf", "Burp Suite"],
-      "status": "authorised testing only"
+      "stack": [
+        "Python",
+        "JSONL",
+        "ffuf",
+        "Burp Suite"
+      ],
+      "status": "Authorised testing only"
     }
   ],
   "experience": [
@@ -30,9 +40,9 @@
       "role": "Cybersecurity Analyst",
       "org": "Docaposte FAST",
       "period": "2024 → now",
-      "summary": "application security testing, WAF deployment and ISO 27001 compliance on in-scope apps.",
+      "summary": "Application security testing, WAF deployment and ISO 27001 compliance on in-scope apps.",
       "points": [
-        "black box and grey box app reviews: enumeration, attack surface, access control, exploitation. two high-severity issues reported",
+        "Black box and grey box app reviews: enumeration, attack surface, access control, exploitation. Two high-severity issues reported",
         "ModSecurity and OWASP CRS deployment and tuning (~15 rules) to cut false positives, with operational docs",
         "ISO 27001 for the scope: risk analysis (EBIOS RM, Egerie), policies, certification audit"
       ]
@@ -41,7 +51,7 @@
       "role": "Systems & Network Administrator",
       "org": "Leader System",
       "period": "2022 → 2023",
-      "summary": "deployment and hardening of Microsoft infrastructures across 50+ clients.",
+      "summary": "Deployment and hardening of Microsoft infrastructures across 50+ clients.",
       "points": [
         "Entra ID, Active Directory, Hyper-V, VMware"
       ]
@@ -50,22 +60,88 @@
       "role": "Remote Maintenance Technician",
       "org": "Securitas",
       "period": "2021 → 2022",
-      "summary": "configuration and maintenance of routers, switches and physical security equipment.",
+      "summary": "Configuration and maintenance of routers, switches and physical security equipment.",
       "points": []
     }
   ],
   "education": [
-    { "title": "Master's in Cybersecurity, offensive security major", "org": "OTERIA Cyber School", "period": "2024 → 2026" },
-    { "title": "Bachelor's in Cybersecurity & Ethical Hacking", "org": "EFREI", "period": "2023 → 2024" },
-    { "title": "Technical degree in Networks & Telecommunications", "org": "IUT Sorbonne Paris Nord", "period": "2021 → 2023" }
+    {
+      "title": "Master's in Cybersecurity, offensive security major",
+      "org": "OTERIA Cyber School",
+      "period": "2024 → 2026"
+    },
+    {
+      "title": "Bachelor's in Cybersecurity & Ethical Hacking",
+      "org": "EFREI",
+      "period": "2023 → 2024"
+    },
+    {
+      "title": "Technical degree in Networks & Telecommunications",
+      "org": "IUT Sorbonne Paris Nord",
+      "period": "2021 → 2023"
+    }
   ],
   "skills": [
-    { "group": "web & API", "tools": ["Burp Suite", "gobuster", "ffuf"], "focus": "XSS, SQLi, SSRF, LFI/RFI, command injection, access control bypass, mass assignment, JWT, GraphQL, CSP bypass" },
-    { "group": "active directory & internal", "tools": ["NetExec", "BloodHound", "Responder", "Nmap"], "focus": "Kerberoasting, password spraying, NTLM/SMB relay, LLMNR/NBT-NS poisoning, ACL abuse, DCSync" },
-    { "group": "mobile & reversing", "tools": ["MobSF", "jadx", "IDA"], "focus": "static APK analysis, DEX decompilation, AndroidManifest review, binary analysis" },
-    { "group": "cloud & containers", "tools": ["Kubernetes", "GCP"], "focus": "RBAC and service accounts, metadata service exploitation, token forging" },
-    { "group": "defence & GRC", "tools": ["ModSecurity", "OWASP CRS", "EBIOS RM", "Egerie", "ISO 27001"], "focus": "WAF tuning, risk analysis, security policies, compliance" },
-    { "group": "systems & dev", "tools": ["Python", "Bash", "Linux", "Windows Server", "Entra ID", "Hyper-V", "VMware"], "focus": "" }
+    {
+      "group": "web & API",
+      "tools": [
+        "Burp Suite",
+        "gobuster",
+        "ffuf"
+      ],
+      "focus": "XSS, SQLi, SSRF, LFI/RFI, command injection, access control bypass, mass assignment, JWT, GraphQL, CSP bypass"
+    },
+    {
+      "group": "active directory & internal",
+      "tools": [
+        "NetExec",
+        "BloodHound",
+        "Responder",
+        "Nmap"
+      ],
+      "focus": "Kerberoasting, password spraying, NTLM/SMB relay, LLMNR/NBT-NS poisoning, ACL abuse, DCSync"
+    },
+    {
+      "group": "mobile & reversing",
+      "tools": [
+        "MobSF",
+        "jadx",
+        "IDA"
+      ],
+      "focus": "Static APK analysis, DEX decompilation, AndroidManifest review, binary analysis"
+    },
+    {
+      "group": "cloud & containers",
+      "tools": [
+        "Kubernetes",
+        "GCP"
+      ],
+      "focus": "RBAC and service accounts, metadata service exploitation, token forging"
+    },
+    {
+      "group": "defence & GRC",
+      "tools": [
+        "ModSecurity",
+        "OWASP CRS",
+        "EBIOS RM",
+        "Egerie",
+        "ISO 27001"
+      ],
+      "focus": "WAF tuning, risk analysis, security policies, compliance"
+    },
+    {
+      "group": "systems & dev",
+      "tools": [
+        "Python",
+        "Bash",
+        "Linux",
+        "Windows Server",
+        "Entra ID",
+        "Hyper-V",
+        "VMware"
+      ],
+      "focus": ""
+    }
   ],
   "currently": [
     "CPTS certification in progress"

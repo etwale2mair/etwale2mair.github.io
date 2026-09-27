@@ -225,7 +225,7 @@ for (const n of published) {
     // sealed stub only: no body, no images ever written
     fmOut.featured = false; // locked items are never featured
     fmOut.tags = []; // no technique tags on active boxes: they hint the path
-    fmOut.description = "an active Hack The Box machine. the writeup is sealed and publishes when the box retires.";
+    fmOut.description = "An active Hack The Box machine. The writeup is sealed and publishes when the box retires.";
     fmOut.locked = true;
     if (n.fm.htb) fmOut.htb = pickHtb(n.fm.htb);
 
@@ -325,9 +325,9 @@ function pickHtb(h) {
 const COMMIT_URL = "https://github.com/etwale2mair/etwale2mair.github.io/commit/";
 function stubBody(sealed) {
   const line = sealed.commit
-    ? `sealed on ${sealed.date} ([timestamp proof](${COMMIT_URL}${sealed.commit})) · sha256 \`${sealed.hash}\``
-    : `sealed ${sealed.date} · sha256 \`${sealed.hash}\``;
-  return `\n> [!info] still active\n> this box is still active on Hack The Box. the writeup goes public when it retires.\n\n${line}\n\nthe full writeup is already written and its hash is published above. when the box retires, the exact file goes public and anyone can check it matches with \`sha256sum\`. the hash cannot change after this point, so the published date is a real commitment.\n`;
+    ? `Sealed on ${sealed.date} ([timestamp proof](${COMMIT_URL}${sealed.commit})) · sha256 \`${sealed.hash}\``
+    : `Sealed ${sealed.date} · sha256 \`${sealed.hash}\``;
+  return `\n> [!info] still active\n> This box is still active on Hack The Box. The writeup goes public when it retires.\n\n${line}\n\nThe full writeup is already written and its hash is published above. When the box retires, the exact file goes public and anyone can check it matches with \`sha256sum\`. The hash cannot change after this point, so the published date is a real commitment.\n`;
 }
 function grepContent(line) {
   const stack = [CONTENT];

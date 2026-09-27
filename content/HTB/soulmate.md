@@ -1,6 +1,6 @@
 ---
 title: soulmate
-description: an active Hack The Box machine. the writeup is sealed and publishes
+description: An active Hack The Box machine. The writeup is sealed and publishes
   when the box retires.
 date: 2026-09-27
 tags: []
@@ -9,14 +9,14 @@ locked: true
 htb:
   os: Linux
 sealed:
-  hash: 3594dfa5293c55dba0d3ea8ba88fa8cb1c1261e222ed72d0c7fbceec1e8ae688
-  date: 2026-09-26
+  hash: 47671de6cc3cd8cb9c7d1196ff633d9519d9d30c87659dcc7f90e06a0bd266fe
+  date: 2026-09-27
   commit: null
 ---
 
 > [!info] still active
-> this box is still active on Hack The Box. the writeup goes public when it retires.
+> This box is still active on Hack The Box. The writeup goes public when it retires.
 
-sealed 2026-09-26 · sha256 `3594dfa5293c55dba0d3ea8ba88fa8cb1c1261e222ed72d0c7fbceec1e8ae688`
+Sealed 2026-09-27 · sha256 `47671de6cc3cd8cb9c7d1196ff633d9519d9d30c87659dcc7f90e06a0bd266fe`
 
-the full writeup is already written and its hash is published above. when the box retires, the exact file goes public and anyone can check it matches with `sha256sum`. the hash cannot change after this point, so the published date is a real commitment.
+The full writeup is already written and its hash is published above. When the box retires, the exact file goes public and anyone can check it matches with `sha256sum`. The hash cannot change after this point, so the published date is a real commitment.

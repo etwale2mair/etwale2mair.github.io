@@ -1,6 +1,6 @@
 ---
 title: Expressway
-description: an active Hack The Box machine. the writeup is sealed and publishes
+description: An active Hack The Box machine. The writeup is sealed and publishes
   when the box retires.
 date: 2026-09-27
 tags: []
@@ -9,14 +9,14 @@ locked: true
 htb:
   os: Linux
 sealed:
-  hash: d4a9fc21d51d0dce1ac280a0e4ec5d18008b3ac840e7031c15e7b0d86821de6e
-  date: 2026-09-26
+  hash: 9375c4927723302de2f1ac6af33f1d51f5aec518dc4d8db9fc3cb5110cf562b9
+  date: 2026-09-27
   commit: null
 ---
 
 > [!info] still active
-> this box is still active on Hack The Box. the writeup goes public when it retires.
+> This box is still active on Hack The Box. The writeup goes public when it retires.
 
-sealed 2026-09-26 · sha256 `d4a9fc21d51d0dce1ac280a0e4ec5d18008b3ac840e7031c15e7b0d86821de6e`
+Sealed 2026-09-27 · sha256 `9375c4927723302de2f1ac6af33f1d51f5aec518dc4d8db9fc3cb5110cf562b9`
 
-the full writeup is already written and its hash is published above. when the box retires, the exact file goes public and anyone can check it matches with `sha256sum`. the hash cannot change after this point, so the published date is a real commitment.
+The full writeup is already written and its hash is published above. When the box retires, the exact file goes public and anyone can check it matches with `sha256sum`. The hash cannot change after this point, so the published date is a real commitment.

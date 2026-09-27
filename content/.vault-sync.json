@@ -7,8 +7,8 @@
         "HTB/Connected.md"
       ],
       "sealed": {
-        "hash": "c7d1c8d26e4c7cf05dffce7cf98fa1f3547400a018a04f2ff072158574d858d5",
-        "date": "2026-09-26",
+        "hash": "df8d50f45031890829acddbf1c650e91a4e56ffec8210da8daceac8ef7a9fcfa",
+        "date": "2026-09-27",
         "commit": null
       }
     },
@@ -18,8 +18,8 @@
         "HTB/Expressway.md"
       ],
       "sealed": {
-        "hash": "d4a9fc21d51d0dce1ac280a0e4ec5d18008b3ac840e7031c15e7b0d86821de6e",
-        "date": "2026-09-26",
+        "hash": "9375c4927723302de2f1ac6af33f1d51f5aec518dc4d8db9fc3cb5110cf562b9",
+        "date": "2026-09-27",
         "commit": null
       }
     },
@@ -29,8 +29,8 @@
         "HTB/Kobold.md"
       ],
       "sealed": {
-        "hash": "729561a9fd1c309446f44a689282263f5aa8e983be920834be94428b08c25c12",
-        "date": "2026-09-26",
+        "hash": "3aebc6b5ac5b6927ce0eedb724cc45eaa768122fba6c6a8edce1c1213df458ee",
+        "date": "2026-09-27",
         "commit": null
       }
     },
@@ -40,8 +40,8 @@
         "HTB/Reactor.md"
       ],
       "sealed": {
-        "hash": "5960559718259be6b13e645332891b272ad696a58e6587b0aae28b97fa455ee2",
-        "date": "2026-09-26",
+        "hash": "5997f14e213df13cae58503153f450e4a693378df07ab3467c3110e78204f234",
+        "date": "2026-09-27",
         "commit": null
       }
     },
@@ -57,8 +57,8 @@
         "HTB/facts.md"
       ],
       "sealed": {
-        "hash": "2f89514e347f433965023b10d519a6a9f83a49f6f953d174c25af010cc3d97fe",
-        "date": "2026-09-26",
+        "hash": "7af8eae970b782f40365a084675ce9de987fddca72c407d74beb4622ba0e93b3",
+        "date": "2026-09-27",
         "commit": null
       }
     },
@@ -68,8 +68,8 @@
         "HTB/soulmate.md"
       ],
       "sealed": {
-        "hash": "3594dfa5293c55dba0d3ea8ba88fa8cb1c1261e222ed72d0c7fbceec1e8ae688",
-        "date": "2026-09-26",
+        "hash": "47671de6cc3cd8cb9c7d1196ff633d9519d9d30c87659dcc7f90e06a0bd266fe",
+        "date": "2026-09-27",
         "commit": null
       }
     },
@@ -77,6 +77,13 @@
       "source": "projets/ai-red-team/Lakera/Solace-AI.md",
       "files": [
         "Lakera/Solace-AI.md"
+      ]
+    },
+    "portswigger/excessive-agency": {
+      "source": "projets/ai-red-team/Portswigger/Exploiting LLM APIs with excessive agency.md",
+      "files": [
+        "PortSwigger/excessive-agency.md",
+        "PortSwigger/images/excessive-agency-1.png"
       ]
     }
   }

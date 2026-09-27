@@ -25,7 +25,7 @@ document.addEventListener("click", (e) => {
   const hash = btn.dataset.hash || "";
   navigator.clipboard?.writeText(hash).then(() => {
     const was = btn.textContent;
-    btn.textContent = "copied";
+    btn.textContent = "Copied";
     setTimeout(() => { btn.textContent = was; }, 1200);
   }).catch(() => {});
 });
@@ -191,7 +191,7 @@ onScroll();
 (function typer() {
   const el = document.getElementById("title-type");
   if (!el) return;
-  const roles = ["offensive security engineer", "AI red teamer", "web & AD pentester"];
+  const roles = ["Offensive security engineer", "AI red teamer", "Web & AD pentester"];
   if (reduceMotion) { el.textContent = roles[0]; return; }
   let ri = 0, ci = 0, deleting = false;
   el.textContent = "";
@@ -279,12 +279,12 @@ function normalCard(w) {
 // active HTB box: proof, never spoilers
 function lockedCard(w) {
   const h = w.htb || {};
-  const facts = ["owned " + esc(h.owned || ""), h.os && esc(h.os), h.difficulty && esc(h.difficulty)]
+  const facts = ["Owned " + esc(h.owned || ""), h.os && esc(h.os), h.difficulty && esc(h.difficulty)]
     .filter(Boolean).join(" · ");
   const verified = h.achievement
-    ? `<a class="verified" href="${esc(h.achievement)}" rel="noopener">verified on Hack The Box ↗</a>` : "";
+    ? `<a class="verified" href="${esc(h.achievement)}" rel="noopener">Verified on Hack The Box ↗</a>` : "";
   const sealed = w.sealed && w.sealed.hash
-    ? `<span class="sealed"><span class="lbl">sealed</span> <code title="${esc(w.sealed.hash)}">${esc(shortHash(w.sealed.hash))}</code><button class="copy-hash" type="button" data-hash="${esc(w.sealed.hash)}" aria-label="copy full hash">copy</button></span>` : "";
+    ? `<span class="sealed"><span class="lbl">Sealed</span> <code title="${esc(w.sealed.hash)}">${esc(shortHash(w.sealed.hash))}</code><button class="copy-hash" type="button" data-hash="${esc(w.sealed.hash)}" aria-label="copy full hash">Copy</button></span>` : "";
   return `<li class="card locked" data-reveal>
     <a class="card-link" href="writeups/${esc(w.slug)}">
       <div class="lock-row"><span class="lockglyph" aria-hidden="true">◆</span><h3>${esc(w.title)}</h3></div>
@@ -300,7 +300,7 @@ fetch("writeups.json")
   .then((data) => {
     const unlockedCount = data.items.filter((w) => !w.locked).length;
     const countEl = document.getElementById("stat-writeups");
-    if (countEl) countEl.dataset.count = String(unlockedCount);
+    if (countEl) { countEl.dataset.count = String(unlockedCount); if (countEl.classList.contains("in") || reduceMotion) animateCount(countEl); }
 
     // featured (never a locked item)
     const featured = data.items.find((w) => w.featured && !w.locked);
@@ -309,11 +309,11 @@ fetch("writeups.json")
       const tags = (featured.tags || []).slice(0, 5).map(tag).join("");
       const meta = [featured.section, fmtDate(featured.date)].filter(Boolean).map((x) => `<span>${esc(x)}</span>`).join("");
       featEl.innerHTML = `<a class="feat-panel" data-reveal href="writeups/${esc(featured.slug)}">
-        <span class="feat-label">featured</span>
+        <span class="feat-label">Featured</span>
         <h3>${esc(featured.title)}</h3>
         <div class="feat-meta">${meta}</div>
         ${featured.description ? `<p class="desc">${esc(featured.description)}</p>` : ""}
-        <div class="feat-foot"><div class="tags">${tags}</div><span class="feat-read">read the writeup →</span></div>
+        <div class="feat-foot"><div class="tags">${tags}</div><span class="feat-read">Read the writeup →</span></div>
       </a>`;
       featEl.hidden = false;
       watchScope(featEl);
@@ -326,7 +326,7 @@ fetch("writeups.json")
 
     const cards = document.getElementById("cards");
     if (!list.length) {
-      cards.innerHTML = '<li class="card" data-reveal><p>writeups coming soon.</p></li>';
+      cards.innerHTML = '<li class="card" data-reveal><p>Writeups coming soon.</p></li>';
       watchScope(cards);
       return;
     }
@@ -335,7 +335,7 @@ fetch("writeups.json")
   })
   .catch(() => {
     const cards = document.getElementById("cards");
-    cards.innerHTML = '<li class="card" data-reveal><p>writeups coming soon.</p></li>';
+    cards.innerHTML = '<li class="card" data-reveal><p>Writeups coming soon.</p></li>';
     watchScope(cards);
   });
 
@@ -368,7 +368,7 @@ fetch("data/profile.json")
         <span class="e-org">${esc(ed.org)}</span>
         <span class="e-period">${esc(ed.period)}</span>
       </div>`).join("");
-      eb.innerHTML = `<div class="timeline">${exp}</div>` + (edu ? `<div class="edu"><div class="edu-label">education</div>${edu}</div>` : "");
+      eb.innerHTML = `<div class="timeline">${exp}</div>` + (edu ? `<div class="edu"><div class="edu-label">Education</div>${edu}</div>` : "");
       watchScope(eb);
     }
 
@@ -384,7 +384,7 @@ fetch("data/profile.json")
 
     const cu = document.getElementById("currently");
     if (cu && p.currently && p.currently.length) {
-      cu.innerHTML = `<div class="lbl" data-reveal>currently</div><ul class="plist">${p.currently.map((c) => `<li data-reveal>${esc(c)}</li>`).join("")}</ul>`;
+      cu.innerHTML = `<div class="lbl" data-reveal>Currently</div><ul class="plist">${p.currently.map((c) => `<li data-reveal>${esc(c)}</li>`).join("")}</ul>`;
       watchScope(cu);
     }
   })

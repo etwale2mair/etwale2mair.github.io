@@ -1,6 +1,6 @@
 ---
 title: Kobold
-description: an active Hack The Box machine. the writeup is sealed and publishes
+description: An active Hack The Box machine. The writeup is sealed and publishes
   when the box retires.
 date: 2026-09-27
 tags: []
@@ -9,14 +9,14 @@ locked: true
 htb:
   os: Linux
 sealed:
-  hash: 729561a9fd1c309446f44a689282263f5aa8e983be920834be94428b08c25c12
-  date: 2026-09-26
+  hash: 3aebc6b5ac5b6927ce0eedb724cc45eaa768122fba6c6a8edce1c1213df458ee
+  date: 2026-09-27
   commit: null
 ---
 
 > [!info] still active
-> this box is still active on Hack The Box. the writeup goes public when it retires.
+> This box is still active on Hack The Box. The writeup goes public when it retires.
 
-sealed 2026-09-26 · sha256 `729561a9fd1c309446f44a689282263f5aa8e983be920834be94428b08c25c12`
+Sealed 2026-09-27 · sha256 `3aebc6b5ac5b6927ce0eedb724cc45eaa768122fba6c6a8edce1c1213df458ee`
 
-the full writeup is already written and its hash is published above. when the box retires, the exact file goes public and anyone can check it matches with `sha256sum`. the hash cannot change after this point, so the published date is a real commitment.
+The full writeup is already written and its hash is published above. When the box retires, the exact file goes public and anyone can check it matches with `sha256sum`. The hash cannot change after this point, so the published date is a real commitment.

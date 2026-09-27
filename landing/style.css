@@ -223,7 +223,7 @@ main { position: relative; z-index: 2; max-width: var(--maxw); margin: 0 auto; p
 .lock-proof { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; margin-top: 0.7rem; font-family: var(--codeFont); font-size: 0.76rem; }
 .lock-proof .verified { color: var(--accent); }
 .lock-proof .sealed { color: var(--dim); display: inline-flex; align-items: center; gap: 0.4rem; }
-.lock-proof .sealed .lbl { text-transform: lowercase; }
+.lock-proof .sealed .lbl { }
 .lock-proof .sealed code { color: var(--muted); }
 .copy-hash { background: none; border: 1px solid var(--line); color: var(--dim); border-radius: 6px; padding: 0.05rem 0.4rem; font-family: var(--codeFont); font-size: 0.7rem; cursor: pointer; }
 .copy-hash:hover { color: var(--accent); border-color: var(--accent); }

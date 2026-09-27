@@ -1,6 +1,6 @@
 ---
 title: Connected
-description: an active Hack The Box machine. the writeup is sealed and publishes
+description: An active Hack The Box machine. The writeup is sealed and publishes
   when the box retires.
 date: 2026-09-27
 tags: []
@@ -9,14 +9,14 @@ locked: true
 htb:
   os: Linux
 sealed:
-  hash: c7d1c8d26e4c7cf05dffce7cf98fa1f3547400a018a04f2ff072158574d858d5
-  date: 2026-09-26
+  hash: df8d50f45031890829acddbf1c650e91a4e56ffec8210da8daceac8ef7a9fcfa
+  date: 2026-09-27
   commit: null
 ---
 
 > [!info] still active
-> this box is still active on Hack The Box. the writeup goes public when it retires.
+> This box is still active on Hack The Box. The writeup goes public when it retires.
 
-sealed 2026-09-26 · sha256 `c7d1c8d26e4c7cf05dffce7cf98fa1f3547400a018a04f2ff072158574d858d5`
+Sealed 2026-09-27 · sha256 `df8d50f45031890829acddbf1c650e91a4e56ffec8210da8daceac8ef7a9fcfa`
 
-the full writeup is already written and its hash is published above. when the box retires, the exact file goes public and anyone can check it matches with `sha256sum`. the hash cannot change after this point, so the published date is a real commitment.
+The full writeup is already written and its hash is published above. When the box retires, the exact file goes public and anyone can check it matches with `sha256sum`. The hash cannot change after this point, so the published date is a real commitment.
