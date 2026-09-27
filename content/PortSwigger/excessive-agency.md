@@ -43,13 +43,8 @@ It called `debug_sql` with that, no embellishment, and it went through. Carlos i
 
 The lesson I take from it: with a tool this powerful, the winning move was to be more precise, not more clever. Every bit of narrative I added gave the model room to "help" and mangle the query. Hand it the exact command and the excessive tool does the rest.
 
-## Why this is LLM06, not LLM01
+## What I take from it
 
-Worth separating the two. LLM01 prompt injection is about bending the model's behaviour with input, and I did lean on that (admin persona, "ignore previous instructions") but it mostly wasted my time. The actual vulnerability is LLM06 excessive agency: even a well-behaved model is dangerous when it can reach a tool that deletes users. The fix is not a better system prompt, it is taking the tool away.
+The whole thing was excessive agency, not a jailbreak. I burned time posing as admin and doing "ignore previous instructions" when none of that was the point: the real problem is that a shop's support bot could run raw SQL at all. No system prompt fixes that, you just don't hand a chatbot a delete-users button.
 
-## Remediation
-
-- Give the assistant only the tools it needs. A shop support bot has no business holding a raw-SQL debug function.
-- Scope every tool tightly: parameterised, read-only where possible, one narrow job each. No "run arbitrary SQL" tool should sit behind an LLM.
-- Enforce authorisation at the API layer, not in the prompt. The backend must check the caller is allowed to delete a user, whatever the model asks.
-- Treat the model as an untrusted client of your APIs. Its blast radius is exactly the set of tools you exposed, so keep that set small.
+The funny part is the model being helpful got in my way more than any guardrail did. My "inactive user" story made it bolt on `AND active='false'` and error out. Dropping the story and handing it the exact query was the whole trick. In OWASP terms that is LLM06, not LLM01, and the fix lives in the tools you expose, not in the prompt.
