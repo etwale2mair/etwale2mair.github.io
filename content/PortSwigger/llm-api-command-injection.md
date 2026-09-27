@@ -19,7 +19,12 @@ featured: false
 
 ## Mapping the APIs
 
-First i ask the assistant which APIs it has and what arguments each one takes, to map the attack surface. Three of them: password reset, newsletter subscription, product info. The password reset needs an account i don't have, so the newsletter is the comfy first target. And to nuke a file i'm going to want code execution, which is exactly the kind of thing a mail-sending backend tends to hand you.
+First i ask the assistant which APIs it has and what arguments each one takes, to map the attack surface. It lists three:
+- password reset
+- newsletter subscription
+- product info
+
+The password reset needs an account i don't have, so the newsletter is the comfy first target. And to nuke a file i'm going to want code execution, which is exactly the kind of thing a mail-sending backend tends to hand you.
 
 ## Does the assistant actually hit the API?
 

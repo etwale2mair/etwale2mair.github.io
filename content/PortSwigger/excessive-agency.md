@@ -21,7 +21,10 @@ featured: false
 
 ## First, what can it actually do
 
-Before trying anything, I ask it straight: which APIs do you have access to? It answers with three: `password_reset`, `product_info`, and `debug_sql`, "execute raw SQL commands on the database".
+Before trying anything, I ask it straight: which APIs do you have access to? It lists three:
+- `password_reset`
+- `product_info`
+- `debug_sql`, which runs raw SQL commands on the database
 
 That last one is the whole lab. The interesting question stops being "can I jailbreak it" and becomes "why does a shop's support bot have a tool that runs arbitrary SQL?". That is excessive agency: the model has far more reach than its job needs, and it will use it if asked the right way.
 
