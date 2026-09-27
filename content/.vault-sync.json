@@ -85,6 +85,21 @@
         "PortSwigger/excessive-agency.md",
         "PortSwigger/images/excessive-agency-1.png"
       ]
+    },
+    "portswigger/llm-api-command-injection": {
+      "source": "projets/ai-red-team/Portswigger/Exploiting vulnerabilities in LLM APIs.md",
+      "files": [
+        "PortSwigger/llm-api-command-injection.md",
+        "PortSwigger/images/llm-api-command-injection-1.png",
+        "PortSwigger/images/llm-api-command-injection-2.png",
+        "PortSwigger/images/llm-api-command-injection-3.png",
+        "PortSwigger/images/llm-api-command-injection-4.png",
+        "PortSwigger/images/llm-api-command-injection-5.png",
+        "PortSwigger/images/llm-api-command-injection-6.png",
+        "PortSwigger/images/llm-api-command-injection-7.png",
+        "PortSwigger/images/llm-api-command-injection-8.png",
+        "PortSwigger/images/llm-api-command-injection-9.png"
+      ]
     }
   }
 }
