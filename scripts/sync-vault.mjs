@@ -132,18 +132,55 @@ for (const n of published) {
 }
 
 /* ---------- transforms ---------- */
-function shortenPrompts(md) {
-  // only inside fenced code blocks; shorten a leading shell prompt to "$ " / "# "
+// collapse a long interactive prompt to "$ " / "# " / "PS> ", command preserved.
+// returns null when the line is not a prompt (output lines are left untouched).
+function shortenPromptLine(line) {
+  let m;
+  if ((m = line.match(/^\s*PS\s+[^>]*>\s+(\S.*?)\s*$/))) return "PS> " + m[1];             // PS C:\...> cmd
+  if ((m = line.match(/^\s*[^\s$#]*@[^\s$#]*([$#])\s+(\S.*?)\s*$/))) return m[1] + " " + m[2]; // user@host:path$ cmd
+  if ((m = line.match(/^\s*\[[^\]]*\][^$#\n]*?([$#])\s+(\S.*?)\s*$/))) return m[1] + " " + m[2]; // [ts] host path $ cmd
+  if ((m = line.match(/^\s*[~/][^$#\n]*?([$#])\s+(\S.*?)\s*$/))) return m[1] + " " + m[2];   // /path $ cmd
+  return null;
+}
+
+// shell-family fence tags, and aliases Shiki does not know natively
+const SHELL_FAMILY = new Set(["bash", "zsh", "sh", "shell", "shellsession", "cmd", "console"]);
+const LANG_MAP = { zsh: "bash", sh: "bash", shell: "bash", shellsession: "console", mysql: "sql", apache: "nginx" };
+
+// one pass over fences: shorten prompts, then pick a fence language so Shiki
+// stops syntax-coloring command output. interactive blocks (with a $/# prompt)
+// become `console`; pasted scripts keep a real language.
+function normalizeCodeBlocks(md) {
+  const lines = md.split("\n");
   const out = [];
-  let inFence = false;
-  for (const line of md.split("\n")) {
-    if (/^\s*```/.test(line)) { inFence = !inFence; out.push(line); continue; }
-    if (inFence) {
-      // e.g. "[etwale🎴exegol]:/workspace $ cmd" or "user@host:/path# cmd"
-      const m = line.match(/^\s*(?:\[[^\]]+\]|[^\s#$]+@[^\s#$]+)\s*:?\s*\S*\s*([#$])\s+(.*)$/);
-      if (m) { out.push(`${m[1]} ${m[2]}`); continue; }
+  let i = 0;
+  while (i < lines.length) {
+    const open = lines[i].match(/^(\s*)```([^\s`]*)\s*$/);
+    if (!open) { out.push(lines[i]); i++; continue; }
+    const indent = open[1];
+    let lang = (open[2] || "").toLowerCase();
+    const body = [];
+    let j = i + 1;
+    while (j < lines.length && !/^\s*```\s*$/.test(lines[j])) { body.push(lines[j]); j++; }
+    const hasClose = j < lines.length;
+
+    const isShell = SHELL_FAMILY.has(lang);
+    const isPwsh = lang === "powershell" || lang === "pwsh" || lang === "ps1";
+    let newBody = body;
+    if (isShell || isPwsh) {
+      newBody = body.map((l) => { const s = shortenPromptLine(l); return s !== null ? s : l; });
     }
-    out.push(line);
+    if (isShell) {
+      const hasPrompt = newBody.some((l) => /^[$#] \S/.test(l));
+      lang = hasPrompt ? "console" : (LANG_MAP[lang] || lang);
+    } else {
+      lang = LANG_MAP[lang] || lang;
+    }
+
+    out.push(indent + "```" + lang);
+    out.push(...newBody);
+    if (hasClose) out.push(lines[j]);
+    i = hasClose ? j + 1 : j;
   }
   return out.join("\n");
 }
@@ -253,7 +290,7 @@ for (const n of published) {
     let md = n.body;
     md = rewriteImages(md, n, writtenFiles);
     md = rewriteWikilinks(md);
-    md = shortenPrompts(md);
+    md = normalizeCodeBlocks(md);
     out = toFrontmatter(fmOut) + "\n" + md.replace(/^\n+/, "");
     // retirement: if this note was a sealed active box before, publish the snapshot verbatim
     const sealedName = n.publicSlug.replace(/\//g, "-");

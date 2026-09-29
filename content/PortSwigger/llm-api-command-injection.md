@@ -42,7 +42,7 @@ So i ask it to subscribe `attacker@YOUR-EXPLOIT-SERVER.exploit-server.net`, and 
 
 Good. My chat message became a real API call, and whatever comes out shows up in the email client. That's all i need.
 
-## Time to try something stinky
+## Trying something stinky
 
 The email string is user input that ends up inside whatever command the backend runs to send the mail. So let's smuggle a shell command in with `$(...)`, which the shell runs first and swaps for its output. I subscribe `$(id)@...`:
 

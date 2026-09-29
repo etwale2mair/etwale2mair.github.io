@@ -1,3 +1,13 @@
 @use "./variables.scss" as *;
 
-// put your custom CSS here!
+// brief 4: keep shell / code blocks readable.
+// long lines (nmap tables, banners) must scroll horizontally, never wrap:
+// a wrapped command line is unreadable. the `pre` and `code` containers already
+// have overflow-x: auto, so we just stop the individual lines from wrapping.
+pre > code {
+  line-height: 1.5;
+
+  & > [data-line] {
+    white-space: pre;
+  }
+}
