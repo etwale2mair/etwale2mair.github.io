@@ -299,8 +299,6 @@ fetch("writeups.json")
   .then((r) => (r.ok ? r.json() : Promise.reject()))
   .then((data) => {
     const unlockedCount = data.items.filter((w) => !w.locked).length;
-    const countEl = document.getElementById("stat-writeups");
-    if (countEl) { countEl.dataset.count = String(unlockedCount); if (countEl.classList.contains("in") || reduceMotion) animateCount(countEl); }
 
     // featured (never a locked item)
     const featured = data.items.find((w) => w.featured && !w.locked);
