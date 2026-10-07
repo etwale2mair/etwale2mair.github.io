@@ -38,7 +38,10 @@ async function updateRootme() {
     const solved = Array.isArray(data?.validations) ? data.validations.length
       : int(data?.nb_validations);
     const score = int(data?.score);
-    if (solved == null || score == null) { console.warn("root-me: unexpected response shape, keeping previous"); return; }
+    if (solved == null || score == null) {
+      console.warn("root-me: unexpected response shape, keeping previous. keys: " + Object.keys(data || {}).join(", "));
+      return;
+    }
     keepOrSet(next.rootme, "solved", solved, prev.rootme.solved);
     keepOrSet(next.rootme, "score", score, prev.rootme.score);
     next.rootme.updated = now;
@@ -89,10 +92,23 @@ function htbMachineCount(data) {
 async function discoverRootmeId(key) {
   try {
     const data = await getJson("https://api.www.root-me.org/auteurs?nom=etwale", { Cookie: `api_key=${key}` });
-    const entries = Array.isArray(data) ? data : Object.values(data || {});
-    const exact = entries.find((e) => String(e?.nom || "").toLowerCase() === "etwale") || entries[0];
-    const id = int(exact?.id_auteur);
+    // Root-Me returns author matches in a few shapes; collect {id, nom} pairs from any of them.
+    const pairs = [];
+    const scan = (v) => {
+      if (Array.isArray(v)) { v.forEach(scan); return; }
+      if (v && typeof v === "object") {
+        if (v.id_auteur && v.nom) pairs.push({ id: v.id_auteur, nom: v.nom });
+        for (const [k, val] of Object.entries(v)) {
+          if (/^\d+$/.test(k) && typeof val === "string") pairs.push({ id: k, nom: val });
+          else scan(val);
+        }
+      }
+    };
+    scan(data);
+    const hit = pairs.find((p) => String(p.nom).toLowerCase() === "etwale") || pairs[0];
+    const id = hit ? int(hit.id) : null;
     if (id) console.log(`root-me: discovered author id ${id} (set ROOTME_AUTHOR_ID to skip this lookup)`);
+    else console.warn("root-me: could not parse an author id from the search. raw: " + JSON.stringify(data).slice(0, 300));
     return id;
   } catch (e) { console.warn(`root-me: author-id discovery failed (${e.message})`); return null; }
 }
