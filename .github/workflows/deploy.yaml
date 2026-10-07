@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: "23 */6 * * *"
 
 permissions:
   contents: read
@@ -31,11 +33,19 @@ jobs:
         run: npx quartz build -o public/writeups
       - name: Generate writeups index
         run: node scripts/gen-writeups-index.mjs public/writeups landing/writeups.json
+      - name: Fetch live Root-Me / HTB counters
+        env:
+          ROOTME_API_KEY: ${{ secrets.ROOTME_API_KEY }}
+          ROOTME_AUTHOR_ID: ${{ secrets.ROOTME_AUTHOR_ID }}
+          HTB_TOKEN: ${{ secrets.HTB_TOKEN }}
+          HTB_USER_ID: ${{ secrets.HTB_USER_ID }}
+        run: node scripts/fetch-stats.mjs
       - name: Assemble landing page at root
         run: |
           cp landing/index.html landing/style.css landing/app.js landing/writeups.json landing/cv.pdf public/
           mkdir -p public/data
           cp landing/data/profile.json public/data/profile.json
+          cp landing/data/stats.json public/data/stats.json
           if [ -d landing/sealed ]; then mkdir -p public/sealed && cp landing/sealed/*.md public/sealed/ 2>/dev/null || true; fi
       - uses: actions/upload-pages-artifact@v3
         with:

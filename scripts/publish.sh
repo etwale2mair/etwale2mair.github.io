@@ -18,22 +18,22 @@ echo "== build =="
 bash scripts/build-site.sh >/dev/null
 echo "built."
 
-git add content/
+git add content/ landing/data/stats.json
 
 if [ "$DRY" = "1" ]; then
   echo "== dry run: content diff =="
-  git --no-pager diff --cached --stat content/ || echo "(no content changes)"
-  git reset -q content/ >/dev/null 2>&1 || true
+  git --no-pager diff --cached --stat content/ landing/data/stats.json || echo "(no changes)"
+  git reset -q content/ landing/data/stats.json >/dev/null 2>&1 || true
   echo "dry run complete. nothing committed."
   exit 0
 fi
 
-if git diff --cached --quiet content/; then
-  echo "no content changes, nothing to publish."
+if git diff --cached --quiet content/ landing/data/stats.json; then
+  echo "no changes, nothing to publish."
   exit 0
 fi
 
-BODY=$(git diff --cached --name-status content/)
+BODY=$(git diff --cached --name-status content/ landing/data/stats.json)
 git -c user.name="etwale2mair" -c user.email="duylamlevo.paris@gmail.com" \
   commit -q -m "content: sync from vault" -m "$BODY" \
   -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"

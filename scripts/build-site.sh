@@ -5,9 +5,11 @@ cd "$(dirname "$0")/.."
 
 npx quartz build -o public/writeups
 node scripts/gen-writeups-index.mjs public/writeups landing/writeups.json
+node scripts/fetch-stats.mjs
 cp landing/index.html landing/style.css landing/app.js landing/writeups.json landing/cv.pdf public/
 mkdir -p public/data
 cp landing/data/profile.json public/data/profile.json
+cp landing/data/stats.json public/data/stats.json
 if [ -d landing/sealed ]; then mkdir -p public/sealed && cp landing/sealed/*.md public/sealed/ 2>/dev/null || true; fi
 
 echo "built ./public  (open with: npx serve public  or  python3 -m http.server -d public)"

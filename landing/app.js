@@ -337,6 +337,26 @@ fetch("writeups.json")
     watchScope(cards);
   });
 
+/* ---------- live Root-Me / HTB counters (data/stats.json) ---------- */
+function setStat(id, value) {
+  const el = document.getElementById(id);
+  if (!el || typeof value !== "number") return;
+  el.dataset.count = String(value);
+  const stat = el.closest(".stat");
+  if (stat && stat.classList.contains("in")) {
+    el.textContent = String(value) + (el.dataset.suffix || ""); // already revealed, no second animation
+  } // otherwise the reveal animates to the new data-count
+}
+fetch("data/stats.json")
+  .then((r) => (r.ok ? r.json() : Promise.reject()))
+  .then((s) => {
+    if (s.rootme) setStat("stat-rootme", s.rootme.solved);
+    if (s.htb) setStat("stat-htb", s.htb.machines);
+    const rm = document.getElementById("stat-rootme");
+    if (rm && s.rootme && s.rootme.updated) rm.closest(".stat")?.setAttribute("title", "updated " + s.rootme.updated.slice(0, 10));
+  })
+  .catch(() => {});
+
 /* ---------- profile sections (projects, experience, skills, currently) ---------- */
 fetch("data/profile.json")
   .then((r) => (r.ok ? r.json() : Promise.reject()))
