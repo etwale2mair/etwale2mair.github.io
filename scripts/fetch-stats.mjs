@@ -27,8 +27,11 @@ console.log(`stats: root-me ${next.rootme.solved} solved / ${next.rootme.score} 
 
 /* ---------- Root-Me ---------- */
 async function updateRootme() {
-  const key = process.env.ROOTME_API_KEY, id = process.env.ROOTME_AUTHOR_ID;
-  if (!key || !id) { console.warn("root-me: ROOTME_API_KEY / ROOTME_AUTHOR_ID not set, keeping previous"); return; }
+  const key = process.env.ROOTME_API_KEY;
+  if (!key) { console.warn("root-me: ROOTME_API_KEY not set, keeping previous"); return; }
+  let id = process.env.ROOTME_AUTHOR_ID;
+  if (!id) id = await discoverRootmeId(key); // find it from the key if the id secret is absent
+  if (!id) { console.warn("root-me: no author id (set ROOTME_AUTHOR_ID), keeping previous"); return; }
   try {
     const data = await getJson(`https://api.www.root-me.org/auteurs/${id}`, { Cookie: `api_key=${key}` });
     // observed shape: { nom, score, validations: [ {...}, ... ] }
@@ -46,15 +49,22 @@ async function updateRootme() {
 
 /* ---------- Hack The Box (optional) ---------- */
 async function updateHtb() {
-  const tok = process.env.HTB_TOKEN, id = process.env.HTB_USER_ID;
-  if (!tok || !id) { console.warn("htb: HTB_TOKEN / HTB_USER_ID not set, skipping (optional)"); return; }
+  const tok = process.env.HTB_TOKEN;
+  if (!tok) { console.warn("htb: HTB_TOKEN not set, skipping (optional)"); return; }
+  let id = process.env.HTB_USER_ID;
+  if (!id) id = await discoverHtbId(tok); // find it from the token if the id secret is absent
+  if (!id) { console.warn("htb: no user id (set HTB_USER_ID), keeping previous"); return; }
   try {
     const data = await getJson(`https://labs.hackthebox.com/api/v4/user/profile/basic/${id}`, {
       Authorization: `Bearer ${tok}`,
       "User-Agent": "etwale-portfolio-stats",
     });
     const machines = htbMachineCount(data);
-    if (machines == null) { console.warn("htb: could not find a machines-owned count in the response, keeping previous"); return; }
+    if (machines == null) {
+      const p = data?.profile ?? data ?? {};
+      console.warn("htb: no machines-owned count found, keeping previous. profile fields: " + Object.keys(p).join(", "));
+      return;
+    }
     keepOrSet(next.htb, "machines", machines, prev.htb.machines);
     next.htb.updated = now;
   } catch (e) {
@@ -72,6 +82,29 @@ function htbMachineCount(data) {
   ];
   for (const c of candidates) { const n = int(c); if (n != null) return n; }
   return null;
+}
+
+// Discover the IDs from the key/token when the id secrets are absent, so the
+// owner only has to provide the key and token. Logs the id (not secret) once.
+async function discoverRootmeId(key) {
+  try {
+    const data = await getJson("https://api.www.root-me.org/auteurs?nom=etwale", { Cookie: `api_key=${key}` });
+    const entries = Array.isArray(data) ? data : Object.values(data || {});
+    const exact = entries.find((e) => String(e?.nom || "").toLowerCase() === "etwale") || entries[0];
+    const id = int(exact?.id_auteur);
+    if (id) console.log(`root-me: discovered author id ${id} (set ROOTME_AUTHOR_ID to skip this lookup)`);
+    return id;
+  } catch (e) { console.warn(`root-me: author-id discovery failed (${e.message})`); return null; }
+}
+async function discoverHtbId(tok) {
+  try {
+    const data = await getJson("https://labs.hackthebox.com/api/v4/user/info", {
+      Authorization: `Bearer ${tok}`, "User-Agent": "etwale-portfolio-stats",
+    });
+    const id = int(data?.info?.id ?? data?.id);
+    if (id) console.log(`htb: discovered user id ${id} (set HTB_USER_ID to skip this lookup)`);
+    return id;
+  } catch (e) { console.warn(`htb: user-id discovery failed (${e.message})`); return null; }
 }
 
 /* ---------- helpers ---------- */
